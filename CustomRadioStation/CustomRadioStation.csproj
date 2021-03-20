@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Copyright>Copyright © ArmanIII 2021</Copyright>
+    <Company>ArmanIII</Company>
+    <Product>FC5 Custom Radio Station</Product>
+    <PackageId>FC5CustomRadioStation</PackageId>
+    <Authors>ArmanIII</Authors>
+    <Description>FC5 Custom Radio Station</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="hdr.jpg" />
+    <None Remove="info_replace.xml" />
+    <None Remove="sample.bnk" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="hdr.jpg" />
+    <EmbeddedResource Include="info_replace.xml" />
+    <EmbeddedResource Include="sample.bnk" />
+  </ItemGroup>
+
+</Project>

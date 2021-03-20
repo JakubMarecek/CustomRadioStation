@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<InfoReplace>
+  <Templates>
+    <template id="CFCXRadioStation">
+      <object hash="59F2984F" name="Generic">
+        <field hash="CF68E402" name="text_hid_DTCTH_ClassName" value-String="CFCXRadioStation" type="BinHex">43464358526164696F53746174696F6E00</field>
+        <field hash="25368426" name="hid_DTCTH_ClassName" value-ComputeHash32="CFCXRadioStation" type="BinHex">3E22A8C0</field>
+        <field hash="8EDB0295" name="disLibItemId" type="Id64" templateValue="ID" />
+        <field hash="D91FFFD3" name="disDbObjectName" type="String">Systemic/Systemic_Radio_Station_CUST</field>
+        <field hash="61FC6B02" name="hidSingleObject" type="BinHex">00</field>
+        <field hash="4B267290" name="sStationName" type="String">Systemic/Systemic_CUST</field>
+        <field hash="2203C794" name="selStationAffiliation" value-Enum="2" type="BinHex">02000000</field>
+        <field hash="7CAAE6F9" name="bShuffleBlocks" value-Boolean="True" type="BinHex">01</field>
+        <field hash="40B7EAE1" name="bReshuffleWhenComplete" value-Boolean="False" type="BinHex">00</field>
+        <field hash="D724D92A" name="bAlwaysPlayFromBeginning" value-Boolean="False" type="BinHex">00</field>
+        <field hash="AA5A0233" name="bLoopActiveTrackDuringOutpostContext" value-Boolean="False" type="BinHex">00</field>
+        <field hash="E954C9D3" name="sndCensoredStaticStartSoundID" value-Int16="48" type="BinHex">3000</field>
+        <field hash="35077676" name="sndCensoredStaticStopSoundID" value-Int16="48" type="BinHex">3000</field>
+        <object hash="49EB0545" name="BlockList">
+          <object hash="42DAB826" name="Block">
+            <object hash="EA5D701A" name="radioblockBlock">
+              <field hash="BD865AD7" name="hid_DbRefId" type="Id64" templateValue="BlockID" />
+              <field hash="CB3EDEF1" name="text_hid_DbRefT" value-String="CFCXRadioBlock" type="BinHex">43464358526164696F426C6F636B00</field>
+              <field hash="57C4D76B" name="hid_DbRefT" value-ComputeHash32="CFCXRadioBlock" type="BinHex">AB2AA7B5</field>
+            </object>
+          </object>
+          <object hash="42DAB826" name="Block">
+            <object hash="EA5D701A" name="radioblockBlock">
+              <field hash="BD865AD7" name="hid_DbRefId" type="BinHex">0000000000000000</field>
+              <field hash="CB3EDEF1" name="text_hid_DbRefT" value-String="CFCXRadioBlock" type="BinHex">43464358526164696F426C6F636B00</field>
+              <field hash="57C4D76B" name="hid_DbRefT" value-ComputeHash32="CFCXRadioBlock" type="BinHex">AB2AA7B5</field>
+            </object>
+          </object>
+        </object>
+        <object hash="3BDFEB4D" name="VOBlockList">
+          <object hash="42DAB826" name="Block">
+            <object hash="EA5D701A" name="radioblockBlock">
+              <field hash="BD865AD7" name="hid_DbRefId" type="BinHex">0000000000000000</field>
+              <field hash="CB3EDEF1" name="text_hid_DbRefT" value-String="CFCXRadioBlock" type="BinHex">43464358526164696F426C6F636B00</field>
+              <field hash="57C4D76B" name="hid_DbRefT" value-ComputeHash32="CFCXRadioBlock" type="BinHex">AB2AA7B5</field>
+            </object>
+          </object>
+        </object>
+        <object hash="0573BCBD" name="CensoredZones" />
+      </object>
+    </template>
+    <template id="CFCXRadioBlock">
+      <object hash="59F2984F" name="Generic">
+        <field hash="CF68E402" name="text_hid_DTCTH_ClassName" value-String="CFCXRadioBlock" type="BinHex">43464358526164696F426C6F636B00</field>
+        <field hash="25368426" name="hid_DTCTH_ClassName" value-ComputeHash32="CFCXRadioBlock" type="BinHex">AB2AA7B5</field>
+        <field hash="8EDB0295" name="disLibItemId" type="Id64" templateValue="ID" />
+        <field hash="D91FFFD3" name="disDbObjectName" type="String">Systemic_Radio_Block_CUST/Systemic_Radio_Block</field>
+        <field hash="61FC6B02" name="hidSingleObject" type="BinHex">00</field>
+        <field hash="4BFDC118" name="sBlockName" type="String">Systemic_Radio_Block</field>
+        <field hash="A5ADF535" name="selBlockType" value-Enum="0" type="BinHex">00000000</field>
+        <field hash="962A59AF" name="bShuffleTracks" value-Boolean="True" type="BinHex">01</field>
+        <field hash="C0378B05" name="bShuffleTracksAgainAfterPlaythrough" value-Boolean="True" type="BinHex">01</field>
+        <field hash="5C78A8D9" name="iNumberOfTracksToPlayFromThisBlock" value-Int32="-1" type="BinHex">FFFFFFFF</field>
+        <field hash="3D286973" name="iNumberOfTracksToAvoidRepeating" value-Int32="0" type="BinHex">00000000</field>
+        <field hash="0943190C" name="fMinimumTimeBetweenTracks" value-Float32="0" type="BinHex">00000000</field>
+        <field hash="D2FC4AEB" name="fMaximumTimeBetweenTracks" value-Float32="0" type="BinHex">00000000</field>
+        <object hash="AF3F66FA" name="TrackList">
+          <object hash="1722D7A2" name="Track">
+            <object hash="E49D65E0" name="radiotrackTrack">
+              <field hash="BD865AD7" name="hid_DbRefId" type="BinHex">0000000000000000</field>
+              <field hash="CB3EDEF1" name="text_hid_DbRefT" value-String="CFCXRadioTrack" type="BinHex">43464358526164696F547261636B00</field>
+              <field hash="57C4D76B" name="hid_DbRefT" value-ComputeHash32="CFCXRadioTrack" type="BinHex">2F455FE0</field>
+            </object>
+          </object>
+        </object>
+        <object hash="ECACAF60" name="RadioItemConditions">
+          <field hash="E29E9816" name="fProbabilityToPlay" value-Float32="100" type="BinHex">0000C842</field>
+          <field hash="F2D3B379" name="iMinimumHourToPlay" value-Int32="0" type="BinHex">00000000</field>
+          <field hash="E758678B" name="iMaximumHourToPlay" value-Int32="24" type="BinHex">18000000</field>
+          <field hash="E1481DA8" name="bIsRegionConstrained" type="Boolean">False</field>
+          <field hash="CF4E9734" name="bOnlyPlayableDuringCensor" value-Boolean="False" type="BinHex">00</field>
+          <object hash="4B399765" name="preconknoKnowledgePreCondition">
+            <field hash="BD865AD7" name="hid_DbRefId" type="BinHex">0000000000000000</field>
+            <field hash="CB3EDEF1" name="text_hid_DbRefT" value-String="CPreConditionKnowledge" type="BinHex">43507265436F6E646974696F6E4B6E6F776C6564676500</field>
+            <field hash="57C4D76B" name="hid_DbRefT" value-ComputeHash32="CPreConditionKnowledge" type="BinHex">F2163D9B</field>
+          </object>
+          <object hash="6B4563CB" name="AvailableRegions">
+            <object hash="FB78DC87" name="ReputationMeter">
+              <field hash="7176BCCA" name="selReputationMeter" value-Enum="2" type="BinHex">02000000</field>
+              <field hash="100DBCFE" name="iPointsRequired" value-Int32="0" type="BinHex">00000000</field>
+            </object>
+          </object>
+        </object>
+      </object>
+    </template>
+    <template id="Track">
+      <object hash="1722D7A2" name="Track">
+        <object hash="E49D65E0" name="radiotrackTrack">
+          <field hash="BD865AD7" name="hid_DbRefId" type="Id64" templateValue="ID" />
+          <field hash="CB3EDEF1" name="text_hid_DbRefT" value-String="CFCXRadioTrack" type="BinHex">43464358526164696F547261636B00</field>
+          <field hash="57C4D76B" name="hid_DbRefT" value-ComputeHash32="CFCXRadioTrack" type="BinHex">2F455FE0</field>
+        </object>
+      </object>
+    </template>
+    <template id="CFCXRadioTrack">
+      <object hash="59F2984F" name="Generic">
+        <field hash="CF68E402" name="text_hid_DTCTH_ClassName" value-String="CFCXRadioTrack" type="BinHex">43464358526164696F547261636B00</field>
+        <field hash="25368426" name="hid_DTCTH_ClassName" value-ComputeHash32="CFCXRadioTrack" type="BinHex">2F455FE0</field>
+        <field hash="8EDB0295" name="disLibItemId" type="Id64" templateValue="ID" />
+        <field hash="D91FFFD3" name="disDbObjectName" type="String">Systemic Tracks CUST/Play_MU_Radio_CUST_Track_01</field>
+        <field hash="61FC6B02" name="hidSingleObject" type="BinHex">00</field>
+        <field hash="AD29A2A7" name="sTrackName" type="String">Play_MU_Radio_CUST_Track_01</field>
+        <field hash="D9F12646" name="sndTrackStartId" type="String" templateValue="BNK" />
+        <field hash="E47A5D3D" name="sndTrackStopId" value-Int16="48" type="BinHex">3000</field>
+        <field hash="3C23F45C" name="bUseSameHoursAsParentBlock" value-Boolean="False" type="BinHex">00</field>
+        <field hash="CB512BD9" name="fTrackDuration" value-Float32="0" type="BinHex">00000000</field>
+        <object hash="30313781" name="radiotrackTrackIntro">
+          <field hash="BD865AD7" name="hid_DbRefId" type="BinHex">0000000000000000</field>
+          <field hash="CB3EDEF1" name="text_hid_DbRefT" value-String="CFCXRadioTrack" type="BinHex">43464358526164696F547261636B00</field>
+          <field hash="57C4D76B" name="hid_DbRefT" value-ComputeHash32="CFCXRadioTrack" type="BinHex">2F455FE0</field>
+        </object>
+        <object hash="386912BF" name="radiotrackTrackOutro">
+          <field hash="BD865AD7" name="hid_DbRefId" type="BinHex">0000000000000000</field>
+          <field hash="CB3EDEF1" name="text_hid_DbRefT" value-String="CFCXRadioTrack" type="BinHex">43464358526164696F547261636B00</field>
+          <field hash="57C4D76B" name="hid_DbRefT" value-ComputeHash32="CFCXRadioTrack" type="BinHex">2F455FE0</field>
+        </object>
+        <object hash="ECACAF60" name="RadioItemConditions">
+          <field hash="E29E9816" name="fProbabilityToPlay" value-Float32="100" type="BinHex">0000C842</field>
+          <field hash="F2D3B379" name="iMinimumHourToPlay" value-Int32="0" type="BinHex">00000000</field>
+          <field hash="E758678B" name="iMaximumHourToPlay" value-Int32="24" type="BinHex">18000000</field>
+          <field hash="E1481DA8" name="bIsRegionConstrained" value-Boolean="False" type="BinHex">00</field>
+          <field hash="CF4E9734" name="bOnlyPlayableDuringCensor" value-Boolean="False" type="BinHex">00</field>
+          <object hash="4B399765" name="preconknoKnowledgePreCondition">
+            <field hash="BD865AD7" name="hid_DbRefId" type="BinHex">0000000000000000</field>
+            <field hash="CB3EDEF1" name="text_hid_DbRefT" value-String="CPreConditionKnowledge" type="BinHex">43507265436F6E646974696F6E4B6E6F776C6564676500</field>
+            <field hash="57C4D76B" name="hid_DbRefT" value-ComputeHash32="CPreConditionKnowledge" type="BinHex">F2163D9B</field>
+          </object>
+        </object>
+      </object>
+    </template>
+    <template id="Station">
+      <object hash="5084C12D" name="Station">
+        <object hash="9B642970" name="radiostationStation">
+          <field hash="BD865AD7" name="hid_DbRefId" type="Id64" templateValue="ID" />
+          <field hash="57C4D76B" name="hid_DbRefT" value-ComputeHash32="CFCXRadioStation" type="BinHex">3E22A8C0</field>
+        </object>
+      </object>
+    </template>
+  </Templates>
+</InfoReplace>
