@@ -13,15 +13,32 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="bnk_id_list.txt" />
     <None Remove="hdr.jpg" />
     <None Remove="info_replace.xml" />
     <None Remove="sample.bnk" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="bnk_id_list.txt" />
     <EmbeddedResource Include="hdr.jpg" />
     <EmbeddedResource Include="info_replace.xml" />
     <EmbeddedResource Include="sample.bnk" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>
