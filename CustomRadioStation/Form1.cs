@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
@@ -30,11 +31,12 @@ namespace CustomRadioStation
 {
     public partial class Form1 : Form
     {
-        public static string m_Path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        List<string> musicFiles = new();
-        List<float> musicFilesVolume = new();
-        List<int> musicFilesLength = new();
-        string[] bnkIDs = new string[] {
+        bool isNewDawn = false;
+        string m_Path = ""; // Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        readonly List<string> musicFiles = new();
+        readonly List<float> musicFilesVolume = new();
+        readonly List<int> musicFilesLength = new();
+        readonly string[] bnkIDs = new string[] {
             "100001",
             "110001",
             "120001",
@@ -46,7 +48,7 @@ namespace CustomRadioStation
             "180001",
             "190001",
         };
-        string[] sampleBNKIDs = new string[] {
+        readonly string[] sampleBNKIDs = new string[] {
             "164370702", // BNK ID
             "888652588", // WEM ID
             "1188643307", // Short ID
@@ -73,8 +75,8 @@ namespace CustomRadioStation
             "749600624",
             "764018471"
         };
-        float[] bnkVolumes = new float[] { -8, -10, -11, -13 };
-        string[] replaceIDRange = new string[] {
+        readonly float[] bnkVolumes = new float[] { -8, -10, -11, -13 };
+        readonly string[] replaceIDRange = new string[] {
             "9017777777770",
             "9017777777771",
             "9017777777772",
@@ -89,16 +91,16 @@ namespace CustomRadioStation
         List<uint> selectedBNKIDs = new();
         List<uint> selectedWEMIDs = new();
         List<uint> selectedShortBNKIDs = new();
-        List<uint> allBNKIDs = new();
-        string outputFileName = "Custom Radio Station.a3";
-        string desc = "Custom Radio Station" + Environment.NewLine +
+        readonly List<uint> allBNKIDs = new();
+        readonly string outputFileName = "Custom Radio Station.a3";
+        readonly string desc = "Custom Radio Station" + Environment.NewLine +
             "[img]hdr.jpg[/img]" + Environment.NewLine + Environment.NewLine +
             "Adds custom radio station to the game." + Environment.NewLine + Environment.NewLine +
             "This package has set station to: [color=::main:color::][b]:stationnum:[/b][/color]" + Environment.NewLine + Environment.NewLine + 
             "[size=2][color=::main:color::][b]List of music[/b][/color][/size]" + Environment.NewLine + ":files:" + Environment.NewLine + Environment.NewLine +
             "The radio station is available right after begin of the game, no other actions is required.";
 
-        string[] freqs = new string[] {
+        readonly string[] freqs = new string[] {
             "91.5 MHz",
             "92.7 MHz",
             "94.3 MHz",
@@ -137,9 +139,6 @@ namespace CustomRadioStation
             saveFileDialog.FileName = outputFileName;
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                Assembly assembly = GetType().Assembly;
-                string workDir = m_Path + "\\";
-
                 if (File.Exists(saveFileDialog.FileName))
                     File.Delete(saveFileDialog.FileName);
 
@@ -160,8 +159,8 @@ namespace CustomRadioStation
 
                 for (int i = 0; i < musicFiles.Count; i++)
                 {
-                    Stream streamBNK = assembly.GetManifestResourceStream(assembly.GetName().Name + ".sample.bnk");
-                    MemoryStream fileStream = new MemoryStream();
+                    Stream streamBNK = GetFromResourceData(isNewDawn ? "sample_nd.bnk" : "sample.bnk");
+                    MemoryStream fileStream = new();
                     streamBNK.CopyTo(fileStream);
                     byte[] bytes = fileStream.ToArray();
 
@@ -295,7 +294,7 @@ namespace CustomRadioStation
                 rInfo.Add(rInfoSoundBanks);
                 xReplaces.Add(rInfo);
 
-                Stream stream = assembly.GetManifestResourceStream(assembly.GetName().Name + ".info_replace.xml");
+                Stream stream = GetFromResourceData("info_replace.xml");
                 XDocument xReplaceXML = XDocument.Load(stream);
                 xReplaceXML.Element("InfoReplace").Add(xReplaces);
 
@@ -303,13 +302,13 @@ namespace CustomRadioStation
                 xReplaceXML.Save(ms2);
                 ms2.Seek(0, SeekOrigin.Begin);
 
-                ZipArchiveEntry zipInfo2 = zip.CreateEntry("info_replace.xml");
+                ZipArchiveEntry zipInfo2 = zip.CreateEntry(isNewDawn ? "info_replace_nd.xml" : "info_replace.xml");
                 using (Stream entryStream2 = zipInfo2.Open())
                 {
                     ms2.CopyTo(entryStream2);
                 };
 
-                Stream stream2 = assembly.GetManifestResourceStream(assembly.GetName().Name + ".hdr.jpg");
+                Stream stream2 = GetFromResourceData("hdr.jpg");
                 ZipArchiveEntry zipInfo3 = zip.CreateEntry("hdr.jpg");
                 using (Stream entryStream3 = zipInfo3.Open())
                 {
@@ -339,7 +338,7 @@ namespace CustomRadioStation
 
         private void button3_Click(object sender, EventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
+            OpenFileDialog openFileDialog = new();
             openFileDialog.Title = "Select music in WEM format";
             openFileDialog.Filter = "Wwise Encoded Media file|*.wem";
             openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
@@ -364,7 +363,7 @@ namespace CustomRadioStation
             if (length == 1)
             {
                 byte[] bytes = File.ReadAllBytes(file);
-                MemoryStream memoryStream = new MemoryStream(bytes);
+                MemoryStream memoryStream = new(bytes);
 
                 byte[] buffer = new byte[sizeof(uint)];
                 memoryStream.Read(buffer, 0, sizeof(uint));
@@ -402,7 +401,7 @@ namespace CustomRadioStation
             musicFilesLength.Add(length);
         }
 
-        public int SearchBytes(byte[] haystack, byte[] needle, int start_index)
+        private static int SearchBytes(byte[] haystack, byte[] needle, int start_index)
         {
             int len = needle.Length;
             int limit = haystack.Length - len;
@@ -418,7 +417,7 @@ namespace CustomRadioStation
             return -1;
         }
 
-        public int[] SearchBytesMultiple(byte[] haystack, byte[] needle)
+        private static int[] SearchBytesMultiple(byte[] haystack, byte[] needle)
         {
             int index = 0;
 
@@ -439,9 +438,9 @@ namespace CustomRadioStation
             return results.ToArray();
         }
 
-        public static string ByteArrayToString(byte[] ba)
+        private static string ByteArrayToString(byte[] ba)
         {
-            StringBuilder hex = new StringBuilder(ba.Length * 2);
+            StringBuilder hex = new(ba.Length * 2);
             foreach (byte b in ba)
                 hex.AppendFormat("{0:x2}", b);
             return hex.ToString();
@@ -499,7 +498,7 @@ namespace CustomRadioStation
             }*/
 
             XDocument xSave = new(new XDeclaration("1.0", "utf-8", "yes"));
-            XElement files = new XElement("Files", new XAttribute("StationNumber", numericUpDown1.Value.ToString()));
+            XElement files = new("Files", new XAttribute("StationNumber", numericUpDown1.Value.ToString()));
             for (int i = 0; i < musicFiles.Count; i++)
             {
                 files.Add(new XElement("Music", new XAttribute("FileName", musicFiles[i]), new XAttribute("Volume", musicFilesVolume[i].ToString()), new XAttribute("Length", musicFilesLength[i].ToString())));
@@ -510,6 +509,9 @@ namespace CustomRadioStation
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            using var processModule = Process.GetCurrentProcess().MainModule;
+            m_Path = Path.GetDirectoryName(processModule?.FileName);
+
             if (File.Exists(m_Path + "\\CustomRadioStation.xml"))
             {
                 XDocument xSave = XDocument.Load(m_Path + "\\CustomRadioStation.xml");
@@ -524,9 +526,17 @@ namespace CustomRadioStation
                     numericUpDown1.Value = decimal.Parse(xAttribute.Value);
             }
 
-            Assembly assembly = GetType().Assembly;
-            Stream stream = assembly.GetManifestResourceStream(assembly.GetName().Name + ".bnk_id_list.txt");
-            StreamReader streamReader = new StreamReader(stream);
+            MessageBoxManager.OK = "Alright";
+            MessageBoxManager.Yes = "Yep!";
+            MessageBoxManager.No = "Nope";
+            MessageBoxManager.Register();
+
+            if (MessageBox.Show("", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                isNewDawn = true;
+            }
+
+            StreamReader streamReader = new(GetFromResourceData(isNewDawn ? "bnk_id_list_nd.txt" : "bnk_id_list.txt"));
             do
             {
                 allBNKIDs.Add(uint.Parse(streamReader.ReadLine()));
@@ -568,6 +578,17 @@ namespace CustomRadioStation
                 Verb = "open"
             };
             Process.Start(ps);
+        }
+
+        private Stream GetFromResourceData(string file)
+        {
+            Assembly assembly = GetType().Assembly;
+            Stream stream = assembly.GetManifestResourceStream(assembly.GetName().Name + ".data.zip");
+
+            ZipArchive zipArchive = new(stream);
+            ZipArchiveEntry zipArchiveEntry = zipArchive.Entries.Where(a => a.FullName == file).FirstOrDefault();
+
+            return zipArchiveEntry.Open();
         }
     }
 }

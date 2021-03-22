@@ -13,17 +13,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="bnk_id_list.txt" />
-    <None Remove="hdr.jpg" />
-    <None Remove="info_replace.xml" />
-    <None Remove="sample.bnk" />
+    <None Remove="data.zip" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="bnk_id_list.txt" />
-    <EmbeddedResource Include="hdr.jpg" />
-    <EmbeddedResource Include="info_replace.xml" />
-    <EmbeddedResource Include="sample.bnk" />
+    <EmbeddedResource Include="data.zip" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,5 +34,23 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>..\bin\</OutputPath>
+    <PublishReadyToRun>true</PublishReadyToRun>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <DebugType>None</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>..\bin_debug\</OutputPath>
+  </PropertyGroup>
 
 </Project>

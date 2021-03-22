@@ -5,3 +5,4 @@
 /.vs
 /CustomRadioStation/bin
 /CustomRadioStation/obj
+/bin_debug/net5.0-windows
