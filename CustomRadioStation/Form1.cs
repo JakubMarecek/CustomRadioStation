@@ -1,5 +1,5 @@
 ﻿/* 
- * FC5 Custom Radio Station
+ * Custom Radio Station
  * Copyright (C) 2021  Jakub Mareček (info@jakubmarecek.cz)
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with Mod Installer.  If not, see <https://www.gnu.org/licenses/>.
+ * along with Custom Radio Station.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 using System;
@@ -31,11 +31,13 @@ namespace CustomRadioStation
 {
     public partial class Form1 : Form
     {
-        bool isNewDawn = false;
+        public static string appName = "Custom Radio Station v1.02 by ArmanIII";
+        GameType gameType;
         string m_Path = ""; // Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         readonly List<string> musicFiles = new();
         readonly List<float> musicFilesVolume = new();
         readonly List<int> musicFilesLength = new();
+        readonly List<string> musicFilesNames = new();
         readonly string[] bnkIDs = new string[] {
             "100001",
             "110001",
@@ -48,34 +50,61 @@ namespace CustomRadioStation
             "180001",
             "190001",
         };
-        readonly string[] sampleBNKIDs = new string[] {
-            "164370702", // BNK ID
-            "888652588", // WEM ID
-            "1188643307", // Short ID
-            "134173468",
-            "417585942",
-            "528275598",
-            "627107392",
-            "658292691",
-            "771727209",
-            "1008334217",
-            "56356790",
-            "48516712",
-            "133802278",
-            "223443951",
-            "744122392",
-            "765935597",
-            "1064289555",
-            "851527417",
-            "974014491",
-            "659444010",
-            "478050401",
-            "1783355234",
-            "2712157172",
-            "749600624",
-            "764018471"
+        readonly uint[] sampleBNKIDs = new uint[] {
+            164370702, // BNK ID
+            888652588, // WEM ID
+            1188643307, // Short ID
+            134173468,
+            417585942,
+            528275598,
+            627107392,
+            658292691,
+            771727209,
+            1008334217,
+            56356790,
+            48516712,
+            133802278,
+            223443951,
+            744122392,
+            765935597,
+            1064289555,
+            851527417,
+            974014491,
+            659444010,
+            478050401,
+            1783355234,
+            2712157172,
+            749600624,
+            764018471
+        };
+        readonly uint[] sampleBNKIDs_ND = new uint[] {
+            1218334055, // BNK ID
+            25667423, // WEM ID
+            973244057, // Short ID
+            178391155,
+            394206044,
+            417585942,
+            501295279,
+            981314518,
+            56356790,
+            117281576,
+            133366811,
+            333086244,
+            475473390,
+            561749661,
+            448846712,
+            860823947,
+            950266236,
+            181380205,
+            331618101,
+            659444010,
+            478050401,
+            1783355234,
+            2712157172,
+            206596153,
         };
         readonly float[] bnkVolumes = new float[] { -8, -10, -11, -13 };
+        readonly float[] bnkVolumes_nd = new float[] { -5, -10, 5, -8, -7 };
         readonly string[] replaceIDRange = new string[] {
             "9017777777770",
             "9017777777771",
@@ -145,8 +174,8 @@ namespace CustomRadioStation
                 ZipArchive zip = ZipFile.Open(saveFileDialog.FileName, ZipArchiveMode.Create);
 
                 string fls = "";
-                foreach (string mf in musicFiles)
-                    fls += Path.GetFileNameWithoutExtension(mf) + Environment.NewLine;
+                foreach (string mf in musicFilesNames)
+                    fls += mf + Environment.NewLine;
 
                 string d = desc.Replace(":files:", fls);
                 d = d.Replace(":stationnum:", numericUpDown1.Value.ToString() + " (" + freqs[(int)numericUpDown1.Value - 1] + ")");
@@ -159,14 +188,15 @@ namespace CustomRadioStation
 
                 for (int i = 0; i < musicFiles.Count; i++)
                 {
-                    Stream streamBNK = GetFromResourceData(isNewDawn ? "sample_nd.bnk" : "sample.bnk");
+                    Stream streamBNK = GetFromResourceData(gameType == GameType.FarCryNewDawn ? "sample_nd.bnk" : "sample.bnk");
                     MemoryStream fileStream = new();
                     streamBNK.CopyTo(fileStream);
                     byte[] bytes = fileStream.ToArray();
 
                     string selectedBNKIDRange = bnkIDs[(int)numericUpDown1.Value - 1];
 
-                    for (int a = 0; a < sampleBNKIDs.Length; a++)
+                    uint[] samplebid = gameType == GameType.FarCryNewDawn ? sampleBNKIDs_ND : sampleBNKIDs;
+                    for (int a = 0; a < samplebid.Length; a++)
                     {
                         uint newBNKID = TryBNKIDFree(uint.Parse(selectedBNKIDRange + a.ToString("00") + i.ToString("00")));
 
@@ -179,7 +209,7 @@ namespace CustomRadioStation
                         if (a == 2)
                             selectedShortBNKIDs.Add(newBNKID);
 
-                        byte[] search = BitConverter.GetBytes(uint.Parse(sampleBNKIDs[a]));
+                        byte[] search = BitConverter.GetBytes(samplebid[a]);
                         byte[] replace = BitConverter.GetBytes(newBNKID);
 
                         int[] poses = SearchBytesMultiple(bytes, search);
@@ -191,10 +221,11 @@ namespace CustomRadioStation
                         }
                     }
 
-                    for (int a = 0; a < bnkVolumes.Length; a++)
+                    float[] vols = gameType == GameType.FarCryNewDawn ? bnkVolumes_nd : bnkVolumes;
+                    for (int a = 0; a < vols.Length; a++)
                     {
-                        byte[] search = BitConverter.GetBytes(bnkVolumes[a]);
-                        byte[] replace = BitConverter.GetBytes(musicFilesVolume[i] + (bnkVolumes[a] + 8));
+                        byte[] search = BitConverter.GetBytes(vols[a]);
+                        byte[] replace = BitConverter.GetBytes(musicFilesVolume[i] + (vols[a] + 8));
 
                         int[] poses = SearchBytesMultiple(bytes, search);
 
@@ -302,13 +333,13 @@ namespace CustomRadioStation
                 xReplaceXML.Save(ms2);
                 ms2.Seek(0, SeekOrigin.Begin);
 
-                ZipArchiveEntry zipInfo2 = zip.CreateEntry(isNewDawn ? "info_replace_nd.xml" : "info_replace.xml");
+                ZipArchiveEntry zipInfo2 = zip.CreateEntry("info_replace.xml");
                 using (Stream entryStream2 = zipInfo2.Open())
                 {
                     ms2.CopyTo(entryStream2);
                 };
 
-                Stream stream2 = GetFromResourceData("hdr.jpg");
+                Stream stream2 = GetFromResourceData(gameType == GameType.FarCryNewDawn ? "hdr_nd.jpg" : "hdr.jpg");
                 ZipArchiveEntry zipInfo3 = zip.CreateEntry("hdr.jpg");
                 using (Stream entryStream3 = zipInfo3.Open())
                 {
@@ -332,6 +363,7 @@ namespace CustomRadioStation
                 musicFiles.RemoveAt(eachItem.Index);
                 musicFilesVolume.RemoveAt(eachItem.Index);
                 musicFilesLength.RemoveAt(eachItem.Index);
+                musicFilesNames.RemoveAt(eachItem.Index);
                 listView1.Items.Remove(eachItem);
             }
         }
@@ -352,7 +384,7 @@ namespace CustomRadioStation
             }
         }
 
-        private void AddMusic(string file, float volume = -8, int length = 1)
+        private void AddMusic(string file, float volume = -8, int length = 1, string name = null)
         {
             if (!File.Exists(file))
             {
@@ -390,8 +422,10 @@ namespace CustomRadioStation
                 return;
             }
 
+            string fname = name ?? Path.GetFileNameWithoutExtension(file);
+
             ListViewItem listViewItem = new();
-            listViewItem.Text = Path.GetFileName(file);
+            listViewItem.Text = fname;
             listViewItem.SubItems.Add(volume.ToString());
             listViewItem.SubItems.Add(length.ToString());
             listView1.Items.Add(listViewItem);
@@ -399,6 +433,7 @@ namespace CustomRadioStation
             musicFiles.Add(file);
             musicFilesVolume.Add(volume);
             musicFilesLength.Add(length);
+            musicFilesNames.Add(fname);
         }
 
         private static int SearchBytes(byte[] haystack, byte[] needle, int start_index)
@@ -421,7 +456,7 @@ namespace CustomRadioStation
         {
             int index = 0;
 
-            List<int> results = new List<int>();
+            List<int> results = new();
 
             while (true)
             {
@@ -469,16 +504,20 @@ namespace CustomRadioStation
                 Form2 form2 = new();
                 form2.MusicLength = musicFilesLength[clickedItem.Index];
                 form2.MusicVolume = (int)musicFilesVolume[clickedItem.Index];
+                form2.MusicName = musicFilesNames[clickedItem.Index];
                 if (form2.ShowDialog() == DialogResult.OK)
                 {
                     int volume = form2.MusicVolume;
                     int length = form2.MusicLength;
+                    string name = form2.MusicName;
 
+                    clickedItem.SubItems[0].Text = name;
                     clickedItem.SubItems[1].Text = volume.ToString();
                     clickedItem.SubItems[2].Text = length.ToString();
 
                     musicFilesLength[clickedItem.Index] = length;
                     musicFilesVolume[clickedItem.Index] = volume;
+                    musicFilesNames[clickedItem.Index] = name;
                 }
             }
         }
@@ -501,7 +540,7 @@ namespace CustomRadioStation
             XElement files = new("Files", new XAttribute("StationNumber", numericUpDown1.Value.ToString()));
             for (int i = 0; i < musicFiles.Count; i++)
             {
-                files.Add(new XElement("Music", new XAttribute("FileName", musicFiles[i]), new XAttribute("Volume", musicFilesVolume[i].ToString()), new XAttribute("Length", musicFilesLength[i].ToString())));
+                files.Add(new XElement("Music", new XAttribute("FileName", musicFiles[i]), new XAttribute("Name", musicFilesNames[i]), new XAttribute("Volume", musicFilesVolume[i].ToString()), new XAttribute("Length", musicFilesLength[i].ToString())));
             }
             xSave.Add(files);
             xSave.Save(m_Path + "\\CustomRadioStation.xml");
@@ -518,7 +557,7 @@ namespace CustomRadioStation
                 IEnumerable<XElement> files = xSave.Element("Files").Elements("Music");
                 foreach (XElement music in files)
                 {
-                    AddMusic(music.Attribute("FileName").Value, float.Parse(music.Attribute("Volume").Value), int.Parse(music.Attribute("Length").Value));
+                    AddMusic(music.Attribute("FileName").Value, float.Parse(music.Attribute("Volume").Value), int.Parse(music.Attribute("Length").Value), music.Attribute("Name")?.Value);
                 }
 
                 XAttribute xAttribute = xSave.Element("Files").Attribute("StationNumber");
@@ -526,17 +565,19 @@ namespace CustomRadioStation
                     numericUpDown1.Value = decimal.Parse(xAttribute.Value);
             }
 
-            MessageBoxManager.OK = "Alright";
-            MessageBoxManager.Yes = "Yep!";
-            MessageBoxManager.No = "Nope";
-            MessageBoxManager.Register();
-
-            if (MessageBox.Show("", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            Form3 form3 = new();
+            if (form3.ShowDialog() == DialogResult.OK)
             {
-                isNewDawn = true;
+                gameType = form3.GameType;
             }
+            else
+                Environment.Exit(0);
 
-            StreamReader streamReader = new(GetFromResourceData(isNewDawn ? "bnk_id_list_nd.txt" : "bnk_id_list.txt"));
+            Text = (gameType == GameType.FarCryNewDawn ? "FCND" : "FC5") + " " + appName;
+
+            pictureBox1.Image = System.Drawing.Image.FromStream(GetFromResourceData(gameType == GameType.FarCryNewDawn ? "hdr_nd.jpg" : "hdr.jpg"));
+
+            StreamReader streamReader = new(GetFromResourceData(gameType == GameType.FarCryNewDawn ? "bnk_id_list_nd.txt" : "bnk_id_list.txt"));
             do
             {
                 allBNKIDs.Add(uint.Parse(streamReader.ReadLine()));

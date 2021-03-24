@@ -1,5 +1,5 @@
 ﻿/* 
- * FC5 Custom Radio Station
+ * Custom Radio Station
  * Copyright (C) 2021  Jakub Mareček (info@jakubmarecek.cz)
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -13,10 +13,12 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with Mod Installer.  If not, see <https://www.gnu.org/licenses/>.
+ * along with Custom Radio Station.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 using System;
+using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace CustomRadioStation
@@ -35,6 +37,12 @@ namespace CustomRadioStation
             set { numericUpDown2.Value = value; }
         }
 
+        public string MusicName
+        {
+            get { return textBox1.Text; }
+            set { textBox1.Text = value; }
+        }
+
         public Form2()
         {
             InitializeComponent();
@@ -42,7 +50,12 @@ namespace CustomRadioStation
 
         private void Form2_Load(object sender, EventArgs e)
         {
-
+            var sii = new NativeMethods.SHSTOCKICONINFO
+            {
+                cbSize = (UInt32)Marshal.SizeOf(typeof(NativeMethods.SHSTOCKICONINFO))
+            };
+            _ = NativeMethods.SHGetStockIconInfo(NativeMethods.SHSTOCKICONID.SIID_HELP, NativeMethods.SHGSI.SHGSI_ICON, ref sii);
+            pictureBox1.Image = Icon.FromHandle(sii.hIcon).ToBitmap();
         }
 
         private void button1_Click(object sender, EventArgs e)
