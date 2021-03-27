@@ -104,7 +104,6 @@ namespace CustomRadioStation
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Form3";
-            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "__title__";
             this.Load += new System.EventHandler(this.Form3_Load);

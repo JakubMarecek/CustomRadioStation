@@ -29,6 +29,7 @@ namespace CustomRadioStation
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.button1 = new System.Windows.Forms.Button();
             this.listView1 = new System.Windows.Forms.ListView();
             this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
@@ -47,7 +48,7 @@ namespace CustomRadioStation
             // button1
             // 
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.button1.Location = new System.Drawing.Point(384, 675);
+            this.button1.Location = new System.Drawing.Point(384, 657);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(180, 31);
             this.button1.TabIndex = 0;
@@ -95,7 +96,7 @@ namespace CustomRadioStation
             // button2
             // 
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.button2.Location = new System.Drawing.Point(198, 675);
+            this.button2.Location = new System.Drawing.Point(198, 657);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(180, 31);
             this.button2.TabIndex = 0;
@@ -106,7 +107,7 @@ namespace CustomRadioStation
             // button3
             // 
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.button3.Location = new System.Drawing.Point(12, 675);
+            this.button3.Location = new System.Drawing.Point(12, 657);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(180, 31);
             this.button3.TabIndex = 0;
@@ -126,7 +127,7 @@ namespace CustomRadioStation
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 608);
+            this.label1.Location = new System.Drawing.Point(12, 601);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(89, 15);
             this.label1.TabIndex = 6;
@@ -134,7 +135,7 @@ namespace CustomRadioStation
             // 
             // numericUpDown1
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(322, 606);
+            this.numericUpDown1.Location = new System.Drawing.Point(323, 599);
             this.numericUpDown1.Maximum = new decimal(new int[] {
             10,
             0,
@@ -157,7 +158,7 @@ namespace CustomRadioStation
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(12, 642);
+            this.linkLabel1.Location = new System.Drawing.Point(12, 628);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(212, 15);
             this.linkLabel1.TabIndex = 8;
@@ -169,7 +170,7 @@ namespace CustomRadioStation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(577, 718);
+            this.ClientSize = new System.Drawing.Size(577, 702);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.numericUpDown1);
             this.Controls.Add(this.label1);
@@ -179,6 +180,7 @@ namespace CustomRadioStation
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
