@@ -35,6 +35,7 @@ namespace CustomRadioStation
             this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader4 = new System.Windows.Forms.ColumnHeader();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -62,7 +63,8 @@ namespace CustomRadioStation
             this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
             this.columnHeader2,
-            this.columnHeader3});
+            this.columnHeader3,
+            this.columnHeader4});
             this.listView1.FullRowSelect = true;
             this.listView1.GridLines = true;
             this.listView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
@@ -92,6 +94,11 @@ namespace CustomRadioStation
             // 
             this.columnHeader3.Text = "Duration in seconds";
             this.columnHeader3.Width = 120;
+            // 
+            // columnHeader4
+            // 
+            this.columnHeader4.Text = "Play condition";
+            this.columnHeader4.Width = 150;
             // 
             // button2
             // 
@@ -207,6 +214,7 @@ namespace CustomRadioStation
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.NumericUpDown numericUpDown1;
         private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.ColumnHeader columnHeader4;
     }
 }
 

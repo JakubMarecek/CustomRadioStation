@@ -43,6 +43,24 @@ namespace CustomRadioStation
             set { textBox1.Text = value; }
         }
 
+        public bool MusicCondNight
+        {
+            get { return checkBox1.Checked; }
+            set { checkBox1.Checked = value; }
+        }
+
+        public int MusicCondMin
+        {
+            get { return (int)numericUpDown3.Value; }
+            set { numericUpDown3.Value = value; }
+        }
+
+        public int MusicCondMax
+        {
+            get { return (int)numericUpDown4.Value; }
+            set { numericUpDown4.Value = value; }
+        }
+
         public Form2()
         {
             InitializeComponent();
@@ -60,7 +78,27 @@ namespace CustomRadioStation
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (numericUpDown3.Value >= numericUpDown4.Value)
+            {
+                MessageBox.Show("Minimum hour can't be same or higher than maximum hour!", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             DialogResult = DialogResult.OK;
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked)
+            {
+                numericUpDown3.Enabled = false;
+                numericUpDown4.Enabled = false;
+            }
+            else
+            {
+                numericUpDown3.Enabled = true;
+                numericUpDown4.Enabled = true;
+            }
         }
     }
 }

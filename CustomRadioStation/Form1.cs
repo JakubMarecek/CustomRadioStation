@@ -31,13 +31,14 @@ namespace CustomRadioStation
 {
     public partial class Form1 : Form
     {
-        public static string appName = "Custom Radio Station v1.02 by ArmanIII";
+        public static string appName = "Custom Radio Station v1.03 by ArmanIII";
         GameType gameType;
         string m_Path = ""; // Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         readonly List<string> musicFiles = new();
         readonly List<float> musicFilesVolume = new();
         readonly List<int> musicFilesLength = new();
         readonly List<string> musicFilesNames = new();
+        readonly List<string> musicFilesCond = new();
         readonly string[] bnkIDs = new string[] {
             "100001",
             "110001",
@@ -157,7 +158,7 @@ namespace CustomRadioStation
 
             if (musicFiles.Count > 90)
             {
-                MessageBox.Show("You have too much music files, remove some of them.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("You have too much music files, remove some of them. Maximum count of musics per station is 90.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -305,11 +306,37 @@ namespace CustomRadioStation
 
                 for (int i = 0; i < musicFiles.Count; i++)
                 {
+                    string minT;
+                    string maxT;
+                    string minNT = "";
+                    string maxNT = "";
+
+                    if (musicFilesCond[i] == "night")
+                    {
+                        minT = "19";
+                        maxT = "23";
+                        minNT = "0";
+                        maxNT = "5";
+                    }
+                    else
+                    {
+                        string[] aa = musicFilesCond[i].Split('-');
+                        minT = aa[0];
+                        maxT = aa[1];
+                    }
+
                     string bnkID = selectedBNKIDs[i].ToString();
                     string bnkShortID = selectedShortBNKIDs[i].ToString();
-                    rTracksOb.Add(new XElement("template", new XAttribute("id", "CFCXRadioTrack"), new XAttribute("templateValueID", selectedID + "3" + i.ToString("00")), new XAttribute("templateValueBNK", bnkID)));
+                    rTracksOb.Add(new XElement("template", new XAttribute("id", "CFCXRadioTrack"), new XAttribute("templateValueID", selectedID + "3" + i.ToString("00")), new XAttribute("templateValueBNK", bnkID), new XAttribute("templateValueMinT", minT), new XAttribute("templateValueMaxT", maxT)));
 
                     rBlocksTracksSub.Add(new XElement("template", new XAttribute("id", "Track"), new XAttribute("templateValueID", selectedID + "3" + i.ToString("00"))));
+
+                    if (minNT != "")
+                    {
+                        rTracksOb.Add(new XElement("template", new XAttribute("id", "CFCXRadioTrack"), new XAttribute("templateValueID", selectedID + "4" + i.ToString("00")), new XAttribute("templateValueBNK", bnkID), new XAttribute("templateValueMinT", minNT), new XAttribute("templateValueMaxT", maxNT)));
+
+                        rBlocksTracksSub.Add(new XElement("template", new XAttribute("id", "Track"), new XAttribute("templateValueID", selectedID + "4" + i.ToString("00"))));
+                    }
 
                     rInfoEvents.Add(new XElement("Event", new XAttribute("ShortID", bnkShortID), new XAttribute("SoundBankID", bnkID), new XAttribute("Priority", "100"), new XAttribute("MemoryNodeId", "22"), new XAttribute("MaxRadius", "220"), new XAttribute("Unknown", "144"), new XAttribute("Duration", musicFilesLength[i].ToString()), new XAttribute("addNode", "1")));
                     rInfoSoundBanks.Add(new XElement("Bank", new XAttribute("ShortID", bnkID), new XAttribute("Unknown", "2139062143"), new XAttribute("bnkFileName", "soundbinary\\" + bnkID + ".bnk"), new XAttribute("addNode", "1")));
@@ -384,7 +411,7 @@ namespace CustomRadioStation
             }
         }
 
-        private void AddMusic(string file, float volume = -8, int length = 1, string name = null)
+        private void AddMusic(string file, float volume = -8, int length = 1, string name = null, string cond = null)
         {
             if (!File.Exists(file))
             {
@@ -424,16 +451,33 @@ namespace CustomRadioStation
 
             string fname = name ?? Path.GetFileNameWithoutExtension(file);
 
+            if (cond == null) cond = "0-23";
+
             ListViewItem listViewItem = new();
             listViewItem.Text = fname;
             listViewItem.SubItems.Add(volume.ToString());
             listViewItem.SubItems.Add(length.ToString());
+            listViewItem.SubItems.Add(TextCond(cond));
             listView1.Items.Add(listViewItem);
 
             musicFiles.Add(file);
             musicFilesVolume.Add(volume);
             musicFilesLength.Add(length);
             musicFilesNames.Add(fname);
+            musicFilesCond.Add(cond);
+        }
+
+        private string TextCond(string cond)
+        {
+            if (cond == "night")
+            {
+                return "Only during night time";
+            }
+            else
+            {
+                string[] aa = cond.Split('-');
+                return "From " + aa[0] + "h to " + aa[1] + "h";
+            }
         }
 
         private static int SearchBytes(byte[] haystack, byte[] needle, int start_index)
@@ -505,19 +549,41 @@ namespace CustomRadioStation
                 form2.MusicLength = musicFilesLength[clickedItem.Index];
                 form2.MusicVolume = (int)musicFilesVolume[clickedItem.Index];
                 form2.MusicName = musicFilesNames[clickedItem.Index];
+
+                if (musicFilesCond[clickedItem.Index] == "night")
+                    form2.MusicCondNight = true;
+                else
+                {
+                    form2.MusicCondNight = false;
+
+                    string[] aa = musicFilesCond[clickedItem.Index].Split('-');
+                    form2.MusicCondMin = int.Parse(aa[0]);
+                    form2.MusicCondMax = int.Parse(aa[1]);
+                }
+
                 if (form2.ShowDialog() == DialogResult.OK)
                 {
                     int volume = form2.MusicVolume;
                     int length = form2.MusicLength;
                     string name = form2.MusicName;
+                    string cond;
+
+                    if (form2.MusicCondNight)
+                        cond = "night";
+                    else
+                    {
+                        cond = form2.MusicCondMin + "-" + form2.MusicCondMax;
+                    }
 
                     clickedItem.SubItems[0].Text = name;
                     clickedItem.SubItems[1].Text = volume.ToString();
                     clickedItem.SubItems[2].Text = length.ToString();
+                    clickedItem.SubItems[3].Text = TextCond(cond);
 
                     musicFilesLength[clickedItem.Index] = length;
                     musicFilesVolume[clickedItem.Index] = volume;
                     musicFilesNames[clickedItem.Index] = name;
+                    musicFilesCond[clickedItem.Index] = cond;
                 }
             }
         }
@@ -540,7 +606,7 @@ namespace CustomRadioStation
             XElement files = new("Files", new XAttribute("StationNumber", numericUpDown1.Value.ToString()));
             for (int i = 0; i < musicFiles.Count; i++)
             {
-                files.Add(new XElement("Music", new XAttribute("FileName", musicFiles[i]), new XAttribute("Name", musicFilesNames[i]), new XAttribute("Volume", musicFilesVolume[i].ToString()), new XAttribute("Length", musicFilesLength[i].ToString())));
+                files.Add(new XElement("Music", new XAttribute("FileName", musicFiles[i]), new XAttribute("Name", musicFilesNames[i]), new XAttribute("Volume", musicFilesVolume[i].ToString()), new XAttribute("Length", musicFilesLength[i].ToString()), new XAttribute("Condition", musicFilesCond[i])));
             }
             xSave.Add(files);
             xSave.Save(m_Path + "\\CustomRadioStation.xml");
@@ -557,7 +623,7 @@ namespace CustomRadioStation
                 IEnumerable<XElement> files = xSave.Element("Files").Elements("Music");
                 foreach (XElement music in files)
                 {
-                    AddMusic(music.Attribute("FileName").Value, float.Parse(music.Attribute("Volume").Value), int.Parse(music.Attribute("Length").Value), music.Attribute("Name")?.Value);
+                    AddMusic(music.Attribute("FileName").Value, float.Parse(music.Attribute("Volume").Value), int.Parse(music.Attribute("Length").Value), music.Attribute("Name")?.Value, music.Attribute("Condition")?.Value);
                 }
 
                 XAttribute xAttribute = xSave.Element("Files").Attribute("StationNumber");
