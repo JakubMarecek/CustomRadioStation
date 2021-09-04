@@ -31,7 +31,7 @@ namespace CustomRadioStation
 {
     public partial class Form1 : Form
     {
-        public static string appName = "Custom Radio Station v1.03 by ArmanIII";
+        public static string appName = "Custom Radio Station v1.04 by ArmanIII";
         GameType gameType;
         string m_Path = ""; // Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         readonly List<string> musicFiles = new();
@@ -123,7 +123,7 @@ namespace CustomRadioStation
         List<uint> selectedShortBNKIDs = new();
         readonly List<uint> allBNKIDs = new();
         readonly string outputFileName = "Custom Radio Station.a3";
-        readonly string desc = "Custom Radio Station" + Environment.NewLine +
+        readonly string desc = 
             "[img]hdr.jpg[/img]" + Environment.NewLine + Environment.NewLine +
             "Adds custom radio station to the game." + Environment.NewLine + Environment.NewLine +
             "This package has set station to: [color=::main:color::][b]:stationnum:[/b][/color]" + Environment.NewLine + Environment.NewLine + 
@@ -181,9 +181,15 @@ namespace CustomRadioStation
                 string d = desc.Replace(":files:", fls);
                 d = d.Replace(":stationnum:", numericUpDown1.Value.ToString() + " (" + freqs[(int)numericUpDown1.Value - 1] + ")");
 
+                string game = "";
+                if (gameType == GameType.FarCry5) game = "FC5";
+                if (gameType == GameType.FarCryNewDawn) game = "FCND";
+
                 XDocument xInfoXML = new(new XDeclaration("1.0", "utf-8", "yes"));
-                XElement xInfo = new("Info");
+                XElement xInfo = new("PackageInfo");
                 xInfo.Add(new XElement("DefaultInclude", "false"));
+                xInfo.Add(new XElement("Games", new XElement("Game", game)));
+                xInfo.Add(new XElement("Name", "Custom Radio Station"));
                 xInfo.Add(new XElement("Description", d));
                 XElement xPairs = new("Pairs");
 
@@ -354,7 +360,7 @@ namespace CustomRadioStation
 
                 Stream stream = GetFromResourceData("info_replace.xml");
                 XDocument xReplaceXML = XDocument.Load(stream);
-                xReplaceXML.Element("InfoReplace").Add(xReplaces);
+                xReplaceXML.Element("PackageInfoReplace").Add(xReplaces);
 
                 MemoryStream ms2 = new();
                 xReplaceXML.Save(ms2);
