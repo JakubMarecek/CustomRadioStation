@@ -20,8 +20,8 @@ namespace CustomRadioStation
 {
     public enum GameType
     {
-        FarCry4 = 4,
-        FarCry5 = 6,
-        FarCryNewDawn = 7
+        FarCry5 = 5,
+        FarCryNewDawn = 8,
+        FarCry6 = 9
     }
 }

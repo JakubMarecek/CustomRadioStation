@@ -59,5 +59,11 @@ namespace CustomRadioStation
             GameType = GameType.FarCryNewDawn;
             DialogResult = DialogResult.OK;
         }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            GameType = GameType.FarCry6;
+            DialogResult = DialogResult.OK;
+        }
     }
 }
