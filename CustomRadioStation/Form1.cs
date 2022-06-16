@@ -51,6 +51,18 @@ namespace CustomRadioStation
             "180001",
             "190001",
         };
+        readonly string[] bnkIDs_6 = new string[] {
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+        };
         readonly uint[] sampleBNKIDs = new uint[] {
             164370702, // BNK ID
             888652588, // WEM ID
@@ -105,16 +117,16 @@ namespace CustomRadioStation
             206596153,
         };
         readonly uint[] sampleBNKIDs_6 = new uint[] {
-            1678687147, // BNK ID
-            624637911, // WEM ID
-            3185078914, // Short ID
-            106380378,
-            320299941,
-            630521720,
-            1043557427,
-            1937429806,
-            2187133148,
-            1056378868,
+            1174781907, // BNK ID
+            723150784, // WEM ID
+            2228076101, // Short ID
+            881797481,
+            // 870504206,
+            // 630521720,
+            // 1043557427,
+            // 1937429806,
+            // 2187133148,
+            524492719
         };
         readonly float[] bnkVolumes = new float[] { -8, -10, -11, -13 };
         readonly float[] bnkVolumes_nd = new float[] { -5, -10, 5, -8, -7 };
@@ -219,7 +231,10 @@ namespace CustomRadioStation
                     streamBNK.CopyTo(fileStream);
                     byte[] bytes = fileStream.ToArray();
 
-                    string selectedBNKIDRange = bnkIDs[(int)numericUpDown1.Value - 1];
+                    string selectedBNKIDRange = "";
+                    if (gameType == GameType.FarCry5) selectedBNKIDRange = bnkIDs[(int)numericUpDown1.Value - 1];
+                    if (gameType == GameType.FarCryNewDawn) selectedBNKIDRange = bnkIDs[(int)numericUpDown1.Value - 1];
+                    if (gameType == GameType.FarCry6) selectedBNKIDRange = bnkIDs_6[(int)numericUpDown1.Value - 1];
 
                     uint[] samplebid = null;
                     if (gameType == GameType.FarCry5) samplebid = sampleBNKIDs;
@@ -256,10 +271,15 @@ namespace CustomRadioStation
                     if (gameType == GameType.FarCryNewDawn) vols = bnkVolumes_nd;
                     if (gameType == GameType.FarCry6) vols = bnkVolumes_6;
 
+                    int volDes = 0;
+                    if (gameType == GameType.FarCry5) volDes = 8;
+                    if (gameType == GameType.FarCryNewDawn) volDes = 8;
+                    if (gameType == GameType.FarCry6) volDes = 6;
+
                     for (int a = 0; a < vols.Length; a++)
                     {
                         byte[] search = BitConverter.GetBytes(vols[a]);
-                        byte[] replace = BitConverter.GetBytes(musicFilesVolume[i] + (vols[a] + 8));
+                        byte[] replace = BitConverter.GetBytes(musicFilesVolume[i] + (vols[a] + volDes));
 
                         int[] poses = SearchBytesMultiple(bytes, search);
 
@@ -336,6 +356,7 @@ namespace CustomRadioStation
                 XElement rInfo = new("Replace", new XAttribute("RequiredFile", @"soundbinary\soundinfo.bin"));
                 XElement rInfoEvents = new("Events");
                 XElement rInfoSoundBanks = new("SoundBanks");
+                XElement rMemoryNodeAssociations = new("MemoryNodeAssociations");
 
                 for (int i = 0; i < musicFiles.Count; i++)
                 {
@@ -373,13 +394,12 @@ namespace CustomRadioStation
 
                     if (gameType == GameType.FarCry6)
                     {
-                        rInfoEvents.Add(new XElement("Event", new XAttribute("ShortID", bnkShortID), new XAttribute("SoundBankID", bnkID), new XAttribute("Priority", "100"), new XAttribute("MemoryNodeId", "22"), new XAttribute("MaxRadius", "220"), new XAttribute("Unknown", "144"), new XAttribute("Duration", musicFilesLength[i].ToString()), new XAttribute("addNode", "1")));
+                        XElement infoEvent = new XElement("Event", new XAttribute("ShortID", bnkShortID), new XAttribute("SoundBankID", bnkID), new XAttribute("Priority", "0"), new XAttribute("MemoryNodeId", "0"), new XAttribute("MaxRadius", "0"), new XAttribute("Unknown", "0"), new XAttribute("Duration", musicFilesLength[i].ToString()), new XAttribute("Unknown2", "153"), new XAttribute("addNode", "1"));
+                        infoEvent.Add(new XElement("Streams", new XElement("Stream", "soundbinary\\" + selectedWEMIDs[i].ToString() + ".wem")));
+
+                        rInfoEvents.Add(infoEvent);
                         rInfoSoundBanks.Add(new XElement("Bank", new XAttribute("ShortID", bnkID), new XAttribute("Unknown", "2139062143"), new XAttribute("bnkFileName", "soundbinary\\" + bnkID + ".bnk"), new XAttribute("addNode", "1")));
-                    
-                    
-                    
-                    
-                    
+                        rMemoryNodeAssociations.Add(new XElement("MemoryNodeAssociation", new XAttribute("SoundBankID", bnkID), new XAttribute("MemoryNodeID", "5"), new XAttribute("addNode", "1")));
                     }
                     else
                     {
@@ -396,9 +416,15 @@ namespace CustomRadioStation
 
                 rInfo.Add(rInfoEvents);
                 rInfo.Add(rInfoSoundBanks);
+                rInfo.Add(rMemoryNodeAssociations);
                 xReplaces.Add(rInfo);
 
-                Stream stream = GetFromResourceData("info_replace.xml");
+                string ir = "";
+                if (gameType == GameType.FarCry5) ir = "info_replace.xml";
+                if (gameType == GameType.FarCryNewDawn) ir = "info_replace.xml";
+                if (gameType == GameType.FarCry6) ir = "info_replace_6.xml";
+
+                Stream stream = GetFromResourceData(ir);
                 XDocument xReplaceXML = XDocument.Load(stream);
                 xReplaceXML.Element("PackageInfoReplace").Add(xReplaces);
 
@@ -690,11 +716,23 @@ namespace CustomRadioStation
             else
                 Environment.Exit(0);
 
-            Text = (gameType == GameType.FarCryNewDawn ? "FCND" : "FC5") + " " + appName;
+            if (gameType == GameType.FarCry5) Text = "FC5" + " " + appName;
+            if (gameType == GameType.FarCryNewDawn) Text = "FCND" + " " + appName;
+            if (gameType == GameType.FarCry6) Text = "FC6" + " " + appName;
 
-            pictureBox1.Image = System.Drawing.Image.FromStream(GetFromResourceData(gameType == GameType.FarCryNewDawn ? "hdr_nd.jpg" : "hdr.jpg"));
+            string pic = "";
+            if (gameType == GameType.FarCry5) pic = "hdr.jpg";
+            if (gameType == GameType.FarCryNewDawn) pic = "hdr_nd.jpg";
+            if (gameType == GameType.FarCry6) pic = "hdr_6.jpg";
 
-            StreamReader streamReader = new(GetFromResourceData(gameType == GameType.FarCryNewDawn ? "bnk_id_list_nd.txt" : "bnk_id_list.txt"));
+            pictureBox1.Image = System.Drawing.Image.FromStream(GetFromResourceData(pic));
+
+            string list = "";
+            if (gameType == GameType.FarCry5) list = "bnk_id_list.txt";
+            if (gameType == GameType.FarCryNewDawn) list = "bnk_id_list_nd.txt";
+            if (gameType == GameType.FarCry6) list = "bnk_id_list_6.txt";
+
+            StreamReader streamReader = new(GetFromResourceData(list));
             do
             {
                 allBNKIDs.Add(uint.Parse(streamReader.ReadLine()));
