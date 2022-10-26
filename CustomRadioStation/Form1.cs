@@ -31,7 +31,7 @@ namespace CustomRadioStation
 {
     public partial class Form1 : Form
     {
-        public static string appName = "Custom Radio Station v1.10 by ArmanIII";
+        public static string appName = "Custom Radio Station v2.00 by ArmanIII";
         GameType gameType;
         string m_Path = ""; // Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         readonly List<string> musicFiles = new();
@@ -39,30 +39,6 @@ namespace CustomRadioStation
         readonly List<int> musicFilesLength = new();
         readonly List<string> musicFilesNames = new();
         readonly List<string> musicFilesCond = new();
-        readonly string[] bnkIDs = new string[] {
-            "100001",
-            "110001",
-            "120001",
-            "130001",
-            "140001",
-            "150001",
-            "160001",
-            "170001",
-            "180001",
-            "190001",
-        };
-        readonly string[] bnkIDs_6 = new string[] {
-            "10",
-            "11",
-            "12",
-            "13",
-            "14",
-            "15",
-            "16",
-            "17",
-            "18",
-            "19",
-        };
         readonly uint[] sampleBNKIDs = new uint[] {
             164370702, // BNK ID
             888652588, // WEM ID
@@ -131,42 +107,7 @@ namespace CustomRadioStation
         readonly float[] bnkVolumes = new float[] { -8, -10, -11, -13 };
         readonly float[] bnkVolumes_nd = new float[] { -5, -10, 5, -8, -7 };
         readonly float[] bnkVolumes_6 = new float[] { -6 };
-        readonly string[] replaceIDRange = new string[] {
-            "9017777777770",
-            "9017777777771",
-            "9017777777772",
-            "9017777777773",
-            "9017777777774",
-            "9017777777775",
-            "9017777777776",
-            "9017777777777",
-            "9017777777778",
-            "9017777777779",
-        };
-        List<uint> selectedBNKIDs = new();
-        List<uint> selectedWEMIDs = new();
-        List<uint> selectedShortBNKIDs = new();
-        readonly List<uint> allBNKIDs = new();
         readonly string outputFileName = "Custom Radio Station.a3";
-        readonly string desc = 
-            "[img]hdr.jpg[/img]" + Environment.NewLine + Environment.NewLine +
-            "Adds custom radio station to the game." + Environment.NewLine + Environment.NewLine +
-            "This package has set station to: [color=::main:color::][b]:stationnum:[/b][/color]" + Environment.NewLine + Environment.NewLine + 
-            "[size=2][color=::main:color::][b]List of music[/b][/color][/size]" + Environment.NewLine + ":files:" + Environment.NewLine + Environment.NewLine +
-            "The radio station is available right after begin of the game, no other actions is required.";
-
-        readonly string[] freqs = new string[] {
-            "91.5 MHz",
-            "92.7 MHz",
-            "94.3 MHz",
-            "96.5 MHz",
-            "97.8 MHz",
-            "99.1 MHz",
-            "101.5 MHz",
-            "102.3 MHz",
-            "104.0 MHz",
-            "105.7 MHz",
-        };
 
         public Form1()
         {
@@ -203,68 +144,84 @@ namespace CustomRadioStation
                 foreach (string mf in musicFilesNames)
                     fls += mf + Environment.NewLine;
 
-                string d = desc.Replace(":files:", fls);
-                d = d.Replace(":stationnum:", numericUpDown1.Value.ToString() + " (" + freqs[(int)numericUpDown1.Value - 1] + ")");
-
                 string game = "";
                 if (gameType == GameType.FarCry5) game = "FC5";
                 if (gameType == GameType.FarCryNewDawn) game = "FCND";
                 if (gameType == GameType.FarCry6) game = "FC6";
 
-                XDocument xInfoXML = new(new XDeclaration("1.0", "utf-8", "yes"));
-                XElement xInfo = new("PackageInfo");
-                xInfo.Add(new XElement("DefaultInclude", "false"));
-                xInfo.Add(new XElement("Games", new XElement("Game", game)));
-                xInfo.Add(new XElement("Name", "Custom Radio Station"));
-                xInfo.Add(new XElement("Description", d));
-                XElement xPairs = new("Pairs");
+                Stream stream = GetFromResourceData("info.xml");
+                XDocument xInfo = XDocument.Load(stream);
+                xInfo.Element("PackageInfo").Element("Games").Element("Game").Value = game;
+                string desc = xInfo.Element("PackageInfo").Element("Description").Value;
+                desc = desc.Replace(":files:", fls);
+                xInfo.Element("PackageInfo").Element("Description").Value = desc;
+
+                string baseID = "1{RadioStation}";
+                string baseCID = "901777777777{RadioStation}";
+
+                XElement xInfoPairs = new("Pairs");
+                xInfo.Root.Add(xInfoPairs);
+
+                string ir = "";
+                if (gameType == GameType.FarCry5) ir = "info_replace.xml";
+                if (gameType == GameType.FarCryNewDawn) ir = "info_replace.xml";
+                if (gameType == GameType.FarCry6) ir = "info_replace_6.xml";
+
+                Stream stream2 = GetFromResourceData(ir);
+                XDocument xReplaceXML = XDocument.Load(stream2);
+                XElement xInfoReplaceReplaces = xReplaceXML.Element("PackageInfoReplace").Element("Replaces");
+
+                XElement xInfoReplaceCFCXRadioStation = xInfoReplaceReplaces.Descendants().Where(d => d.Attribute("CRS")?.Value == "1").Single();
+                xInfoReplaceCFCXRadioStation.Attribute("templateValueID").Value = baseCID + "100";
+                xInfoReplaceCFCXRadioStation.Attribute("templateValueBlockID").Value = baseCID + "200";
+
+                XElement xInfoReplaceStation = xInfoReplaceReplaces.Descendants().Where(d => d.Attribute("CRS")?.Value == "2").Single();
+                xInfoReplaceStation.Attribute("templateValueID").Value = baseCID + "100";
+
+                XElement xInfoReplaceTracks = xInfoReplaceReplaces.Descendants().Where(d => d.Attribute("CRS")?.Value == "3").Single();
+
+                XElement xInfoReplaceBlockID = xInfoReplaceReplaces.Descendants().Where(d => d.Attribute("CRS")?.Value == "4").Single();
+                xInfoReplaceBlockID.Value = baseCID + "200";
+
+                XElement xInfoReplaceBlockTracks = xInfoReplaceReplaces.Descendants().Where(d => d.Attribute("CRS")?.Value == "5").Single();
+                
+                XElement xInfoReplaceSoundInfoEvents = xInfoReplaceReplaces.Descendants().Where(d => d.Attribute("CRS")?.Value == "6").Single();
+                XElement xInfoReplaceSoundInfoSoundBanks = xInfoReplaceReplaces.Descendants().Where(d => d.Attribute("CRS")?.Value == "7").Single();
+                XElement xInfoReplaceSoundInfoMem = xInfoReplaceReplaces.Descendants().Where(d => d.Attribute("CRS")?.Value == "8").Single();
 
                 for (int i = 0; i < musicFiles.Count; i++)
                 {
-                    string bnkSel = "";
-                    if (gameType == GameType.FarCry5) bnkSel = "sample.bnk";
-                    if (gameType == GameType.FarCryNewDawn) bnkSel = "sample_nd.bnk";
-                    if (gameType == GameType.FarCry6) bnkSel = "sample_6.bnk";
-
-                    Stream streamBNK = GetFromResourceData(bnkSel);
-                    MemoryStream fileStream = new();
-                    streamBNK.CopyTo(fileStream);
-                    byte[] bytes = fileStream.ToArray();
-
-                    string selectedBNKIDRange = "";
-                    if (gameType == GameType.FarCry5) selectedBNKIDRange = bnkIDs[(int)numericUpDown1.Value - 1];
-                    if (gameType == GameType.FarCryNewDawn) selectedBNKIDRange = bnkIDs[(int)numericUpDown1.Value - 1];
-                    if (gameType == GameType.FarCry6) selectedBNKIDRange = bnkIDs_6[(int)numericUpDown1.Value - 1];
+                    string bnkID = "";
+                    string wemID = "";
+                    string shortID = "";
 
                     uint[] samplebid = null;
                     if (gameType == GameType.FarCry5) samplebid = sampleBNKIDs;
                     if (gameType == GameType.FarCryNewDawn) samplebid = sampleBNKIDs_ND;
                     if (gameType == GameType.FarCry6) samplebid = sampleBNKIDs_6;
 
+                    XElement xBNKReplace = new("Replace");
+
                     for (int a = 0; a < samplebid.Length; a++)
                     {
-                        uint newBNKID = TryBNKIDFree(uint.Parse(selectedBNKIDRange + a.ToString("00") + i.ToString("00")));
+                        string newID = baseID + a.ToString("00") + i.ToString("00");
 
                         if (a == 0)
-                            selectedBNKIDs.Add(newBNKID);
+                            bnkID = newID;
 
                         if (a == 1)
-                            selectedWEMIDs.Add(newBNKID);
+                            wemID = newID;
 
                         if (a == 2)
-                            selectedShortBNKIDs.Add(newBNKID);
+                            shortID = newID;
 
-                        byte[] search = BitConverter.GetBytes(samplebid[a]);
-                        byte[] replace = BitConverter.GetBytes(newBNKID);
+                        string search = samplebid[a].ToString();
+                        string replace = newID.ToString();
 
-                        int[] poses = SearchBytesMultiple(bytes, search);
-
-                        foreach (int pos in poses)
-                        {
-                            fileStream.Position = pos;
-                            fileStream.Write(replace, 0, replace.Length);
-                        }
+                        xBNKReplace.Add(new XElement("Replace", new XAttribute("find", search), new XAttribute("replace", replace), new XAttribute("type", "UInt32")));
                     }
+
+                    xBNKReplace.Add(new XAttribute("RequiredFile", "soundbinary\\" + bnkID + ".bnk"));
 
                     float[] vols = null;
                     if (gameType == GameType.FarCry5) vols = bnkVolumes;
@@ -278,88 +235,15 @@ namespace CustomRadioStation
 
                     for (int a = 0; a < vols.Length; a++)
                     {
-                        byte[] search = BitConverter.GetBytes(vols[a]);
-                        byte[] replace = BitConverter.GetBytes(musicFilesVolume[i] + (vols[a] + volDes));
+                        string search = vols[a].ToString();
+                        string replace = (musicFilesVolume[i] + (vols[a] + volDes)).ToString();
 
-                        int[] poses = SearchBytesMultiple(bytes, search);
-
-                        foreach (int pos in poses)
-                        {
-                            fileStream.Position = pos;
-                            fileStream.Write(replace, 0, replace.Length);
-                        }
+                        xBNKReplace.Add(new XElement("Replace", new XAttribute("find", search), new XAttribute("replace", replace), new XAttribute("type", "Float32")));
                     }
 
-                    fileStream.Seek(0, SeekOrigin.Begin);
-
-                    XElement xPair = new("Pair");
-                    xPair.Add(new XElement("Source", Path.GetFileName(musicFiles[i])));
-                    xPair.Add(new XElement("Target", "soundbinary/" + selectedWEMIDs[i] + ".wem"));
-                    xPairs.Add(xPair);
-
-                    XElement xPair2 = new("Pair");
-                    xPair2.Add(new XElement("Source", Path.GetFileNameWithoutExtension(musicFiles[i]) + ".bnk"));
-                    xPair2.Add(new XElement("Target", "soundbinary/" + selectedBNKIDs[i] + ".bnk"));
-                    xPairs.Add(xPair2);
-
-                    zip.CreateEntryFromFile(musicFiles[i], Path.GetFileName(musicFiles[i]));
-
-                    ZipArchiveEntry zipBNK = zip.CreateEntry(Path.GetFileNameWithoutExtension(musicFiles[i]) + ".bnk");
-                    using (Stream entryStream = zipBNK.Open())
-                    {
-                        fileStream.CopyTo(entryStream);
-                    };
-                }
-
-                /*XElement XPairF1 = new("Pair");
-                XPairF1.Add(new XElement("FromDatFile", @"patch.fat"));
-                XPairF1.Add(new XElement("Source", @"databases\generic\radiostations.ndb"));
-                XPairF1.Add(new XElement("Target", @"databases\generic\radiostations.ndb"));
-                xPairs.Add(XPairF1);
-
-                XElement XPairF2 = new("Pair");
-                XPairF2.Add(new XElement("FromDatFile", @"\worlds\installpkg.fat"));
-                XPairF2.Add(new XElement("Source", @"databases\generic\radiotracks.ndb"));
-                XPairF2.Add(new XElement("Target", @"databases\generic\radiotracks.ndb"));
-                xPairs.Add(XPairF2);*/
-
-                xInfo.Add(xPairs);
-                xInfoXML.Add(xInfo);
-
-                MemoryStream ms = new();
-                xInfoXML.Save(ms);
-                ms.Seek(0, SeekOrigin.Begin);
-
-                ZipArchiveEntry zipInfo = zip.CreateEntry("info.xml");
-                using (Stream entryStream = zipInfo.Open())
-                {
-                    ms.CopyTo(entryStream);
-                };
+                    xInfoReplaceReplaces.Add(xBNKReplace);
 
 
-                string selectedID = replaceIDRange[(int)numericUpDown1.Value - 1];
-
-                XElement xReplaces = new("Replaces");
-                xReplaces.Add(new XElement("Replace", new XAttribute("RequiredFile", @"databases\generic\radiostations.ndb"), new XElement("object", new XAttribute("hash", "1F027DA1"), new XElement("template", new XAttribute("id", "CFCXRadioStation"), new XAttribute("templateValueID", selectedID + "100"), new XAttribute("templateValueBlockID", selectedID + "200")))));
-                xReplaces.Add(new XElement("Replace", new XAttribute("RequiredFile", @"generated\nomadobjecttemplates_rt.fcb"), new XElement("object", new XAttribute("hash", "772EA8B4"), new XElement("template", new XAttribute("id", "Station"), new XAttribute("templateValueID", selectedID + "100")))));
-
-                XElement rBlocks = new("Replace", new XAttribute("RequiredFile", @"databases\generic\radioblocks.ndb"));
-                rBlocks.Add(new XElement("object", new XAttribute("hash", "1F027DA1"), new XElement("template", new XAttribute("id", "CFCXRadioBlock"), new XAttribute("templateValueID", selectedID + "200"))));
-
-                string rbID = ByteArrayToString(BitConverter.GetBytes(ulong.Parse(selectedID + "200"))).ToUpper();
-                XElement rBlocksTracks = new("object", new XAttribute("hash", "59F2984F"), new XElement("primaryKey", rbID, new XAttribute("hash", "8EDB0295")));
-                XElement rBlocksTracksSub = new("object", new XAttribute("hash", "AF3F66FA"));
-
-                XElement rTracks = new("Replace", new XAttribute("RequiredFile", @"databases\generic\radiotracks.ndb"));
-                XElement rTracksOb = new("object", new XAttribute("hash", "1F027DA1"));
-
-                XElement rInfo = new("Replace", new XAttribute("RequiredFile", @"soundbinary\soundinfo.bin"));
-                XElement rInfoEvents = new("Events");
-                XElement rInfoSoundBanks = new("SoundBanks");
-                XElement rMemoryNodeAssociations = new("MemoryNodeAssociations");
-
-                for (int i = 0; i < musicFiles.Count; i++)
-                {
                     string minT;
                     string maxT;
                     string minNT = "";
@@ -379,54 +263,67 @@ namespace CustomRadioStation
                         maxT = aa[1];
                     }
 
-                    string bnkID = selectedBNKIDs[i].ToString();
-                    string bnkShortID = selectedShortBNKIDs[i].ToString();
-                    rTracksOb.Add(new XElement("template", new XAttribute("id", "CFCXRadioTrack"), new XAttribute("templateValueID", selectedID + "3" + i.ToString("00")), new XAttribute("templateValueBNK", bnkID), new XAttribute("templateValueMinT", minT), new XAttribute("templateValueMaxT", maxT)));
+                    xInfoReplaceTracks.Add(new XElement("template", new XAttribute("id", "CFCXRadioTrack"), new XAttribute("templateValueID", baseCID + "3" + i.ToString("00")), new XAttribute("templateValueBNK", bnkID), new XAttribute("templateValueMinT", minT), new XAttribute("templateValueMaxT", maxT)));
 
-                    rBlocksTracksSub.Add(new XElement("template", new XAttribute("id", "Track"), new XAttribute("templateValueID", selectedID + "3" + i.ToString("00"))));
+                    xInfoReplaceBlockTracks.Add(new XElement("template", new XAttribute("id", "Track"), new XAttribute("templateValueID", baseCID + "3" + i.ToString("00"))));
 
                     if (minNT != "")
                     {
-                        rTracksOb.Add(new XElement("template", new XAttribute("id", "CFCXRadioTrack"), new XAttribute("templateValueID", selectedID + "4" + i.ToString("00")), new XAttribute("templateValueBNK", bnkID), new XAttribute("templateValueMinT", minNT), new XAttribute("templateValueMaxT", maxNT)));
+                        xInfoReplaceTracks.Add(new XElement("template", new XAttribute("id", "CFCXRadioTrack"), new XAttribute("templateValueID", baseCID + "4" + i.ToString("00")), new XAttribute("templateValueBNK", bnkID), new XAttribute("templateValueMinT", minNT), new XAttribute("templateValueMaxT", maxNT)));
 
-                        rBlocksTracksSub.Add(new XElement("template", new XAttribute("id", "Track"), new XAttribute("templateValueID", selectedID + "4" + i.ToString("00"))));
+                        xInfoReplaceBlockTracks.Add(new XElement("template", new XAttribute("id", "Track"), new XAttribute("templateValueID", baseCID + "4" + i.ToString("00"))));
                     }
 
                     if (gameType == GameType.FarCry6)
                     {
-                        XElement infoEvent = new XElement("Event", new XAttribute("ShortID", bnkShortID), new XAttribute("SoundBankID", bnkID), new XAttribute("Priority", "0"), new XAttribute("MemoryNodeId", "0"), new XAttribute("MaxRadius", "0"), new XAttribute("Unknown", "0"), new XAttribute("Duration", musicFilesLength[i].ToString()), new XAttribute("Unknown2", "153"), new XAttribute("addNode", "1"));
-                        infoEvent.Add(new XElement("Streams", new XElement("Stream", "soundbinary\\" + selectedWEMIDs[i].ToString() + ".wem")));
+                        XElement infoEvent = new XElement("Event", new XAttribute("ShortID", shortID), new XAttribute("SoundBankID", bnkID), new XAttribute("Priority", "0"), new XAttribute("MemoryNodeId", "0"), new XAttribute("MaxRadius", "0"), new XAttribute("Unknown", "0"), new XAttribute("Duration", musicFilesLength[i].ToString()), new XAttribute("Unknown2", "153"), new XAttribute("addNode", "1"));
+                        infoEvent.Add(new XElement("Streams", new XElement("Stream", "soundbinary\\" + wemID + ".wem")));
 
-                        rInfoEvents.Add(infoEvent);
-                        rInfoSoundBanks.Add(new XElement("Bank", new XAttribute("ShortID", bnkID), new XAttribute("Unknown", "2139062143"), new XAttribute("bnkFileName", "soundbinary\\" + bnkID + ".bnk"), new XAttribute("addNode", "1")));
-                        rMemoryNodeAssociations.Add(new XElement("MemoryNodeAssociation", new XAttribute("SoundBankID", bnkID), new XAttribute("MemoryNodeID", "5"), new XAttribute("addNode", "1")));
+                        xInfoReplaceSoundInfoEvents.Add(infoEvent);
+                        xInfoReplaceSoundInfoSoundBanks.Add(new XElement("Bank", new XAttribute("ShortID", bnkID), new XAttribute("Unknown", "2139062143"), new XAttribute("bnkFileName", "soundbinary\\" + bnkID + ".bnk"), new XAttribute("addNode", "1")));
+                        xInfoReplaceSoundInfoMem.Add(new XElement("MemoryNodeAssociation", new XAttribute("SoundBankID", bnkID), new XAttribute("MemoryNodeID", "5"), new XAttribute("addNode", "1")));
                     }
                     else
                     {
-                        rInfoEvents.Add(new XElement("Event", new XAttribute("ShortID", bnkShortID), new XAttribute("SoundBankID", bnkID), new XAttribute("Priority", "100"), new XAttribute("MemoryNodeId", "22"), new XAttribute("MaxRadius", "220"), new XAttribute("Unknown", "144"), new XAttribute("Duration", musicFilesLength[i].ToString()), new XAttribute("addNode", "1")));
-                        rInfoSoundBanks.Add(new XElement("Bank", new XAttribute("ShortID", bnkID), new XAttribute("Unknown", "2139062143"), new XAttribute("bnkFileName", "soundbinary\\" + bnkID + ".bnk"), new XAttribute("addNode", "1")));
+                        xInfoReplaceSoundInfoEvents.Add(new XElement("Event", new XAttribute("ShortID", shortID), new XAttribute("SoundBankID", bnkID), new XAttribute("Priority", "100"), new XAttribute("MemoryNodeId", "22"), new XAttribute("MaxRadius", "220"), new XAttribute("Unknown", "144"), new XAttribute("Duration", musicFilesLength[i].ToString()), new XAttribute("addNode", "1")));
+                        xInfoReplaceSoundInfoSoundBanks.Add(new XElement("Bank", new XAttribute("ShortID", bnkID), new XAttribute("Unknown", "2139062143"), new XAttribute("bnkFileName", "soundbinary\\" + bnkID + ".bnk"), new XAttribute("addNode", "1")));
                     }
+
+
+                    XElement xPair = new("Pair");
+                    xPair.Add(new XElement("Source", Path.GetFileName(musicFiles[i])));
+                    xPair.Add(new XElement("Target", "soundbinary/" + wemID + ".wem"));
+                    xInfoPairs.Add(xPair);
+
+                    XElement xPair2 = new("Pair");
+                    xPair2.Add(new XElement("Source", "source.bnk"));
+                    xPair2.Add(new XElement("Target", "soundbinary/" + bnkID + ".bnk"));
+                    xInfoPairs.Add(xPair2);
+
+                    zip.CreateEntryFromFile(musicFiles[i], Path.GetFileName(musicFiles[i]));
                 }
-                rTracks.Add(rTracksOb);
-                xReplaces.Add(rTracks);
 
-                rBlocksTracks.Add(rBlocksTracksSub);
-                rBlocks.Add(rBlocksTracks);
-                xReplaces.Add(rBlocks);
+                string b = "";
+                if (gameType == GameType.FarCry5) b = "sample.bnk";
+                if (gameType == GameType.FarCryNewDawn) b = "sample_nd.bnk";
+                if (gameType == GameType.FarCry6) b = "sample_6.bnk";
 
-                rInfo.Add(rInfoEvents);
-                rInfo.Add(rInfoSoundBanks);
-                rInfo.Add(rMemoryNodeAssociations);
-                xReplaces.Add(rInfo);
+                Stream streamBNK = GetFromResourceData(b);
+                ZipArchiveEntry zipBNK = zip.CreateEntry("source.bnk");
+                using (Stream entryBNK = zipBNK.Open())
+                {
+                    streamBNK.CopyTo(entryBNK);
+                };
 
-                string ir = "";
-                if (gameType == GameType.FarCry5) ir = "info_replace.xml";
-                if (gameType == GameType.FarCryNewDawn) ir = "info_replace.xml";
-                if (gameType == GameType.FarCry6) ir = "info_replace_6.xml";
+                MemoryStream ms = new();
+                xInfo.Save(ms);
+                ms.Seek(0, SeekOrigin.Begin);
 
-                Stream stream = GetFromResourceData(ir);
-                XDocument xReplaceXML = XDocument.Load(stream);
-                xReplaceXML.Element("PackageInfoReplace").Add(xReplaces);
+                ZipArchiveEntry zipInfo = zip.CreateEntry("info.xml");
+                using (Stream entryStream = zipInfo.Open())
+                {
+                    ms.CopyTo(entryStream);
+                };
 
                 MemoryStream ms2 = new();
                 xReplaceXML.Save(ms2);
@@ -443,18 +340,14 @@ namespace CustomRadioStation
                 if (gameType == GameType.FarCryNewDawn) pic = "hdr_nd.jpg";
                 if (gameType == GameType.FarCry6) pic = "hdr_6.jpg";
 
-                Stream stream2 = GetFromResourceData(pic);
+                Stream stream3 = GetFromResourceData(pic);
                 ZipArchiveEntry zipInfo3 = zip.CreateEntry("hdr.jpg");
                 using (Stream entryStream3 = zipInfo3.Open())
                 {
-                    stream2.CopyTo(entryStream3);
+                    stream3.CopyTo(entryStream3);
                 };
 
                 zip.Dispose();
-
-                selectedBNKIDs = new();
-                selectedWEMIDs = new();
-                selectedShortBNKIDs = new();
 
                 MessageBox.Show("Successfuly saved!", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -557,43 +450,6 @@ namespace CustomRadioStation
             }
         }
 
-        private static int SearchBytes(byte[] haystack, byte[] needle, int start_index)
-        {
-            int len = needle.Length;
-            int limit = haystack.Length - len;
-            for (int i = start_index; i <= limit; i++)
-            {
-                int k = 0;
-                for (; k < len; k++)
-                {
-                    if (needle[k] != haystack[i + k]) break;
-                }
-                if (k == len) return i;
-            }
-            return -1;
-        }
-
-        private static int[] SearchBytesMultiple(byte[] haystack, byte[] needle)
-        {
-            int index = 0;
-
-            List<int> results = new();
-
-            while (true)
-            {
-                index = SearchBytes(haystack, needle, index);
-
-                if (index == -1)
-                    break;
-
-                results.Add(index);
-
-                index += needle.Length;
-            }
-
-            return results.ToArray();
-        }
-
         private static string ByteArrayToString(byte[] ba)
         {
             StringBuilder hex = new(ba.Length * 2);
@@ -680,7 +536,7 @@ namespace CustomRadioStation
             }*/
 
             XDocument xSave = new(new XDeclaration("1.0", "utf-8", "yes"));
-            XElement files = new("Files", new XAttribute("StationNumber", numericUpDown1.Value.ToString()));
+            XElement files = new("Files");
             for (int i = 0; i < musicFiles.Count; i++)
             {
                 files.Add(new XElement("Music", new XAttribute("FileName", musicFiles[i]), new XAttribute("Name", musicFilesNames[i]), new XAttribute("Volume", musicFilesVolume[i].ToString()), new XAttribute("Length", musicFilesLength[i].ToString()), new XAttribute("Condition", musicFilesCond[i])));
@@ -702,10 +558,6 @@ namespace CustomRadioStation
                 {
                     AddMusic(music.Attribute("FileName").Value, float.Parse(music.Attribute("Volume").Value), int.Parse(music.Attribute("Length").Value), music.Attribute("Name")?.Value, music.Attribute("Condition")?.Value);
                 }
-
-                XAttribute xAttribute = xSave.Element("Files").Attribute("StationNumber");
-                if (xAttribute != null)
-                    numericUpDown1.Value = decimal.Parse(xAttribute.Value);
             }
 
             Form3 form3 = new();
@@ -726,19 +578,6 @@ namespace CustomRadioStation
             if (gameType == GameType.FarCry6) pic = "hdr_6.jpg";
 
             pictureBox1.Image = System.Drawing.Image.FromStream(GetFromResourceData(pic));
-
-            string list = "";
-            if (gameType == GameType.FarCry5) list = "bnk_id_list.txt";
-            if (gameType == GameType.FarCryNewDawn) list = "bnk_id_list_nd.txt";
-            if (gameType == GameType.FarCry6) list = "bnk_id_list_6.txt";
-
-            StreamReader streamReader = new(GetFromResourceData(list));
-            do
-            {
-                allBNKIDs.Add(uint.Parse(streamReader.ReadLine()));
-            }
-            while (!streamReader.EndOfStream);
-            streamReader.Close();
         }
 
         private void listView1_KeyDown(object sender, KeyEventArgs e)
@@ -751,19 +590,6 @@ namespace CustomRadioStation
                     item.Selected = true;
                 }
             }
-        }
-
-        private uint TryBNKIDFree(uint id)
-        {
-            if (allBNKIDs.Contains(id))
-            {
-                id += 10000;
-                return TryBNKIDFree(id);
-            }
-
-            allBNKIDs.Add(id);
-
-            return id;
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

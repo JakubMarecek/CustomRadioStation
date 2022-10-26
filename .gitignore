@@ -9,3 +9,4 @@
 /bin/net5.0-windows/win-x64
 /bin/net6.0-windows/win-x64
 /bin_debug/net6.0-windows
+/PublishSign.bat

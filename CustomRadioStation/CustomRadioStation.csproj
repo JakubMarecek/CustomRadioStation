@@ -5,17 +5,14 @@
 	  <ApplicationIcon>crs.ico</ApplicationIcon>
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
-    <Copyright>Copyright © ArmanIII 2021</Copyright>
+    <Copyright>Copyright © ArmanIII 2022</Copyright>
     <Company>ArmanIII</Company>
-    <Product>FC5 Custom Radio Station</Product>
-    <PackageId>FC5CustomRadioStation</PackageId>
+    <Product>Custom Radio Station</Product>
+    <PackageId>CustomRadioStation</PackageId>
     <Authors>ArmanIII</Authors>
-    <Description>FC5 Custom Radio Station</Description>
+    <Description>Custom Radio Station</Description>
+	  <AssemblyTitle>Custom Radio Station</AssemblyTitle>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="data.zip" />
-  </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="data.zip" />
@@ -37,16 +34,15 @@
   </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <PlatformTarget>x64</PlatformTarget>
-    <OutputPath>..\bin\</OutputPath>
-    <PublishReadyToRun>true</PublishReadyToRun>
-    <PublishSingleFile>true</PublishSingleFile>
-    <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-    <DebugType>None</DebugType>
-    <DebugSymbols>false</DebugSymbols>
+	  <PlatformTarget>x64</PlatformTarget>
+	  <OutputPath>..\bin\</OutputPath>
+	  <DebugType>None</DebugType>
+	  <DebugSymbols>false</DebugSymbols>
+	  <PublishSingleFile>true</PublishSingleFile>
+	  <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+	  <SelfContained>false</SelfContained>
 
-    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+	  <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
