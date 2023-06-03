@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<PackageInfoReplace>
+  <Templates>
+    <template id="CFCXRadioStation">
+      <object hash="59F2984F">
+        <field hash="CF68E402" type="BinHex">43464358526164696F53746174696F6E00</field>
+        <field hash="25368426" type="BinHex">3E22A8C0</field>
+        <field hash="8EDB0295" type="Id64" templateValue="ID" />
+        <field hash="D91FFFD3" type="String">Systemic/Systemic_Radio_Station_CUST</field>
+        <field hash="61FC6B02" type="BinHex">00</field>
+        <field hash="4B267290" type="String">Systemic/Systemic_CUST</field>
+        <field hash="2203C794" type="BinHex">02000000</field>
+        <field hash="7CAAE6F9" type="BinHex">01</field>
+        <field hash="40B7EAE1" type="BinHex">00</field>
+        <field hash="D724D92A" type="BinHex">00</field>
+        <field hash="AA5A0233" type="BinHex">00</field>
+        <field hash="E954C9D3" type="BinHex">3000</field>
+        <field hash="35077676" type="BinHex">3000</field>
+        <object hash="49EB0545">
+          <object hash="42DAB826">
+            <object hash="EA5D701A">
+              <field hash="BD865AD7" type="Id64" templateValue="BlockID" />
+              <field hash="CB3EDEF1" type="BinHex">43464358526164696F426C6F636B00</field>
+              <field hash="57C4D76B" type="BinHex">AB2AA7B5</field>
+            </object>
+          </object>
+          <object hash="42DAB826">
+            <object hash="EA5D701A">
+              <field hash="BD865AD7" type="BinHex">0000000000000000</field>
+              <field hash="CB3EDEF1" type="BinHex">43464358526164696F426C6F636B00</field>
+              <field hash="57C4D76B" type="BinHex">AB2AA7B5</field>
+            </object>
+          </object>
+        </object>
+        <object hash="3BDFEB4D">
+          <object hash="42DAB826">
+            <object hash="EA5D701A">
+              <field hash="BD865AD7" type="BinHex">0000000000000000</field>
+              <field hash="CB3EDEF1" type="BinHex">43464358526164696F426C6F636B00</field>
+              <field hash="57C4D76B" type="BinHex">AB2AA7B5</field>
+            </object>
+          </object>
+        </object>
+        <object hash="0573BCBD" />
+      </object>
+    </template>
+    <template id="Track">
+      <object hash="1722D7A2">
+        <object hash="E49D65E0">
+          <field hash="BD865AD7" type="Id64" templateValue="ID" />
+          <field hash="CB3EDEF1" type="BinHex">43464358526164696F547261636B00</field>
+          <field hash="57C4D76B" type="BinHex">2F455FE0</field>
+        </object>
+      </object>
+    </template>
+    <template id="CFCXRadioTrack">
+      <object hash="59F2984F">
+        <field hash="CF68E402" type="BinHex">43464358526164696F547261636B00</field>
+        <field hash="25368426" type="BinHex">2F455FE0</field>
+        <field hash="8EDB0295" type="Id64" templateValue="ID" />
+        <field hash="D91FFFD3" type="String">Systemic Tracks CUST/Play_MU_Radio_CUST_Track_01</field>
+        <field hash="61FC6B02" type="BinHex">00</field>
+        <field hash="AD29A2A7" type="String">Play_MU_Radio_CUST_Track_01</field>
+        <field hash="266BCE4C" type="UInt32" templateValue="BNK" />
+        <field hash="71F827E4" type="BinHex">00000000</field>
+        <field hash="3C23F45C" type="BinHex">00</field>
+        <field hash="CB512BD9" type="BinHex">00000000</field>
+        <object hash="30313781">
+          <field hash="BD865AD7" type="BinHex">0000000000000000</field>
+          <field hash="CB3EDEF1" type="BinHex">43464358526164696F547261636B00</field>
+          <field hash="57C4D76B" type="BinHex">2F455FE0</field>
+        </object>
+        <object hash="386912BF">
+          <field hash="BD865AD7" type="BinHex">0000000000000000</field>
+          <field hash="CB3EDEF1" type="BinHex">43464358526164696F547261636B00</field>
+          <field hash="57C4D76B" type="BinHex">2F455FE0</field>
+        </object>
+        <object hash="ECACAF60">
+          <field hash="E29E9816" type="BinHex">0000C842</field>
+          <field hash="F2D3B379" type="Int32" templateValue="MinT" />
+          <field hash="E758678B" type="Int32" templateValue="MaxT" />
+          <field hash="E1481DA8" type="BinHex">00</field>
+          <field hash="CF4E9734" type="BinHex">00</field>
+          <object hash="4B399765">
+            <field hash="BD865AD7" type="BinHex">0000000000000000</field>
+            <field hash="CB3EDEF1" type="BinHex">43507265436F6E646974696F6E4B6E6F776C6564676500</field>
+            <field hash="57C4D76B" type="BinHex">F2163D9B</field>
+          </object>
+        </object>
+        <object hash="4DA6B338">
+          <field hash="45C893F1" type="BinHex">00</field>
+          <object hash="5983AC89" />
+        </object>
+      </object>
+    </template>
+    <template id="Station">
+      <object hash="5084C12D">
+        <object hash="9B642970">
+          <field hash="BD865AD7" type="Id64" templateValue="ID" />
+          <field hash="57C4D76B" type="BinHex">3E22A8C0</field>
+        </object>
+      </object>
+    </template>
+  </Templates>
+  <Replaces>
+    <Replace RequiredFile="databases\generic\radiostations.ndb">
+      <object hash="1F027DA1">
+        <template id="CFCXRadioStation" templateValueID="" templateValueBlockID="" CRS="1" />
+      </object>
+    </Replace>
+    <Replace RequiredFile="generated\nomadobjecttemplates_rt.fcb">
+      <object hash="772EA8B4">
+        <template id="Station" templateValueID="" CRS="2" />
+      </object>
+    </Replace>
+    <Replace RequiredFile="databases\generic\radiotracks.ndb">
+      <object hash="1F027DA1" CRS="3" />
+    </Replace>
+    <Replace RequiredFile="databases\generic\radioblocks.ndb">
+      <object hash="1F027DA1">
+        <object hash="59F2984F" addNode="1">
+          <field hash="CF68E402" type="BinHex">43464358526164696F426C6F636B00</field>
+          <field hash="25368426" type="BinHex">AB2AA7B5</field>
+          <field hash="8EDB0295" type="Id64" CRS="4"></field>
+          <field hash="D91FFFD3" type="String">Systemic_Radio_Block_CUST/Systemic_Radio_Block</field>
+          <field hash="61FC6B02" type="BinHex">00</field>
+          <field hash="4BFDC118" type="String">Systemic_Radio_Block</field>
+          <field hash="A5ADF535" type="BinHex">00000000</field>
+          <field hash="962A59AF" type="BinHex">01</field>
+          <field hash="C0378B05" type="BinHex">01</field>
+          <field hash="5C78A8D9" type="BinHex">FFFFFFFF</field>
+          <field hash="3D286973" type="BinHex">00000000</field>
+          <field hash="0943190C" type="BinHex">00000000</field>
+          <field hash="D2FC4AEB" type="BinHex">00000000</field>
+          <object hash="AF3F66FA" CRS="5">
+            <object hash="1722D7A2">
+              <object hash="E49D65E0">
+                <field hash="BD865AD7" type="BinHex">0000000000000000</field>
+                <field hash="CB3EDEF1" type="BinHex">43464358526164696F547261636B00</field>
+                <field hash="57C4D76B" type="BinHex">2F455FE0</field>
+              </object>
+            </object>
+          </object>
+          <object hash="ECACAF60">
+            <field hash="E29E9816" type="BinHex">0000C842</field>
+            <field hash="F2D3B379" type="BinHex">00000000</field>
+            <field hash="E758678B" type="BinHex">18000000</field>
+            <field hash="E1481DA8" type="Boolean">False</field>
+            <field hash="CF4E9734" type="BinHex">00</field>
+            <object hash="4B399765">
+              <field hash="BD865AD7" type="BinHex">0000000000000000</field>
+              <field hash="CB3EDEF1" type="BinHex">43507265436F6E646974696F6E4B6E6F776C6564676500</field>
+              <field hash="57C4D76B" type="BinHex">F2163D9B</field>
+            </object>
+            <object hash="6B4563CB">
+              <object hash="FB78DC87">
+                <field hash="7176BCCA" type="BinHex">02000000</field>
+                <field hash="100DBCFE" type="BinHex">00000000</field>
+              </object>
+            </object>
+          </object>
+        </object>
+      </object>
+    </Replace>
+    <Replace RequiredFile="soundbinary\soundinfo.bin">
+      <Events CRS="6" />
+      <SoundBanks CRS="7" />
+      <MemoryNodeAssociations CRS="8" />
+    </Replace>
+  </Replaces>
+</PackageInfoReplace>

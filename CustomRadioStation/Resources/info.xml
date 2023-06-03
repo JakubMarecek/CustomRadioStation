@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<PackageInfo>
+  <Games>
+    <Game></Game>
+  </Games>
+  <Name>Custom Radio Station</Name>
+  <Description>
+  [img]hdr.jpg[/img]
+
+  Adds custom radio station to the game.
+  
+  [size=2][color=::main:color::][b]List of music[/b][/color][/size]
+  :files:
+  
+  The radio station is available right after begin of the game, no other actions is required.
+  </Description>
+  <Options>
+    <Option ID="RadioStation" name="Radio station">
+      <option name="Channel 1 (91.5 MHz)" value="00" />
+      <option name="Channel 2 (92.7 MHz)" value="01" />
+      <option name="Channel 3 (94.3 MHz)" value="02" />
+      <option name="Channel 4 (96.5 MHz)" value="03" />
+      <option name="Channel 5 (97.8 MHz)" value="04" />
+      <option name="Channel 6 (99.1 MHz)" value="05" />
+      <option name="Channel 7 (101.5 MHz)" value="06" />
+      <option name="Channel 8 (102.3 MHz)" value="07" />
+      <option name="Channel 9 (104.0 MHz)" value="08" />
+      <option name="Channel 10 (105.7 MHz)" value="09" />
+    </Option>
+  </Options>
+</PackageInfo>
