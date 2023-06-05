@@ -15,7 +15,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="data.zip" />
+    <EmbeddedResource Include="Resources\hdr_6.jpg" />
+    <EmbeddedResource Include="Resources\hdr_nd.jpg" />
+    <EmbeddedResource Include="Resources\hdr.jpg" />
+    <EmbeddedResource Include="Resources\info_replace_6.xml" />
+    <EmbeddedResource Include="Resources\info_replace.xml" />
+    <EmbeddedResource Include="Resources\info.xml" />
+    <EmbeddedResource Include="Resources\sample_6.bnk" />
+    <EmbeddedResource Include="Resources\sample_nd.bnk" />
+    <EmbeddedResource Include="Resources\sample.bnk" />
   </ItemGroup>
 
   <ItemGroup>

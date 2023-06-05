@@ -16,16 +16,36 @@
   </Description>
   <Options>
     <Option ID="RadioStation" name="Radio station">
-      <option name="Channel 1 (91.5 MHz)" value="00" />
-      <option name="Channel 2 (92.7 MHz)" value="01" />
-      <option name="Channel 3 (94.3 MHz)" value="02" />
-      <option name="Channel 4 (96.5 MHz)" value="03" />
-      <option name="Channel 5 (97.8 MHz)" value="04" />
-      <option name="Channel 6 (99.1 MHz)" value="05" />
-      <option name="Channel 7 (101.5 MHz)" value="06" />
-      <option name="Channel 8 (102.3 MHz)" value="07" />
-      <option name="Channel 9 (104.0 MHz)" value="08" />
-      <option name="Channel 10 (105.7 MHz)" value="09" />
+      <option name="Channel 1" value="00" />
+      <option name="Channel 2" value="01" />
+      <option name="Channel 3" value="02" />
+      <option name="Channel 4" value="03" />
+      <option name="Channel 5" value="04" />
+      <option name="Channel 6" value="05" />
+      <option name="Channel 7" value="06" />
+      <option name="Channel 8" value="07" />
+      <option name="Channel 9" value="08" />
+      <option name="Channel 10" value="09" />
+      <option name="Channel 11" value="10" />
+      <option name="Channel 12" value="11" />
+      <option name="Channel 13" value="12" />
+      <option name="Channel 14" value="13" />
+      <option name="Channel 15" value="14" />
+      <option name="Channel 16" value="15" />
+      <option name="Channel 17" value="16" />
+      <option name="Channel 18" value="17" />
+      <option name="Channel 19" value="18" />
+      <option name="Channel 20" value="19" />
+      <option name="Channel 21" value="20" />
+      <option name="Channel 22" value="21" />
+      <option name="Channel 23" value="22" />
+      <option name="Channel 24" value="23" />
+      <option name="Channel 25" value="24" />
+      <option name="Channel 26" value="25" />
+      <option name="Channel 27" value="26" />
+      <option name="Channel 28" value="27" />
+      <option name="Channel 29" value="28" />
+      <option name="Channel 30" value="29" />
     </Option>
   </Options>
 </PackageInfo>

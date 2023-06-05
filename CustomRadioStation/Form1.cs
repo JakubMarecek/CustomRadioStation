@@ -118,13 +118,15 @@ namespace CustomRadioStation
         {
             if (musicFiles.Count == 0)
             {
-                MessageBox.Show("There are no music files, can't create package!", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                using (new CenterWinDialog(this))
+                    MessageBox.Show("There are no music files, can't create package!", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (musicFiles.Count > 900)
             {
-                MessageBox.Show("You have too much music files, remove some of them. Maximum count of musics per station is 900.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                using (new CenterWinDialog(this))
+                    MessageBox.Show("You have too much music files, remove some of them. Maximum count of musics per station is 900.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -187,7 +189,7 @@ namespace CustomRadioStation
                 xInfoReplaceBlockID.Value = baseCID + "200";
 
                 XElement xInfoReplaceBlockTracks = xInfoReplaceReplaces.Descendants().Where(d => d.Attribute("CRS")?.Value == "5").Single();
-                
+
                 XElement xInfoReplaceSoundInfoEvents = xInfoReplaceReplaces.Descendants().Where(d => d.Attribute("CRS")?.Value == "6").Single();
                 XElement xInfoReplaceSoundInfoSoundBanks = xInfoReplaceReplaces.Descendants().Where(d => d.Attribute("CRS")?.Value == "7").Single();
                 XElement xInfoReplaceSoundInfoMem = xInfoReplaceReplaces.Descendants().Where(d => d.Attribute("CRS")?.Value == "8").Single();
@@ -363,7 +365,8 @@ namespace CustomRadioStation
 
                 zip.Dispose();
 
-                MessageBox.Show("Successfuly saved!", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                using (new CenterWinDialog(this))
+                    MessageBox.Show("Successfuly saved!", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -384,7 +387,7 @@ namespace CustomRadioStation
             OpenFileDialog openFileDialog = new();
             openFileDialog.Title = "Select music in WEM format";
             openFileDialog.Filter = "Wwise Encoded Media file|*.wem";
-            openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            //openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             openFileDialog.Multiselect = true;
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
@@ -395,15 +398,16 @@ namespace CustomRadioStation
             }
         }
 
-        private void AddMusic(string file, float volume = -8, int length = 1, string name = null, string cond = null)
+        private void AddMusic(string file, float volume = -8, string name = null, string cond = null)
         {
             if (!File.Exists(file))
             {
-                MessageBox.Show("File " + file + " doesn't exist.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                using (new CenterWinDialog(this))
+                    MessageBox.Show("File " + file + " doesn't exist.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            if (length == 1)
+            /*if (length == 1)
             {
                 byte[] bytes = File.ReadAllBytes(file);
                 MemoryStream memoryStream = new(bytes);
@@ -431,6 +435,16 @@ namespace CustomRadioStation
             {
                 MessageBox.Show("Selected file is not format of Wwise Encoded Media!", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
+            }*/
+
+            WEMFile wf = new();
+            if (!wf.LoadWEM(file))
+            {
+                using (new CenterWinDialog(this))
+                {
+                    MessageBox.Show($"Error occurred during loading WEM file:{Environment.NewLine}{wf.ParseErrorStr}{Environment.NewLine}{Environment.NewLine}The error can be caused by wrong WEM encoding. Please convert WEM to correct encoding or select different WEM.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                return;
             }
 
             string fname = name ?? Path.GetFileNameWithoutExtension(file);
@@ -438,15 +452,16 @@ namespace CustomRadioStation
             if (cond == null) cond = "0-23";
 
             ListViewItem listViewItem = new();
+            listViewItem.ToolTipText = fname + Environment.NewLine + wf.PrintInfo();
             listViewItem.Text = fname;
             listViewItem.SubItems.Add(volume.ToString());
-            listViewItem.SubItems.Add(length.ToString());
+            listViewItem.SubItems.Add(wf.AudioLength.ToString());
             listViewItem.SubItems.Add(TextCond(cond));
             listView1.Items.Add(listViewItem);
 
             musicFiles.Add(file);
             musicFilesVolume.Add(volume);
-            musicFilesLength.Add(length);
+            musicFilesLength.Add(wf.AudioLength);
             musicFilesNames.Add(fname);
             musicFilesCond.Add(cond);
         }
@@ -535,6 +550,18 @@ namespace CustomRadioStation
             }
         }
 
+        private void listView1_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                var focusedItem = listView1.FocusedItem;
+                if (focusedItem != null && focusedItem.Bounds.Contains(e.Location))
+                {
+                    contextMenuStrip1.Show(Cursor.Position);
+                }
+            }
+        }
+
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             /*if (musicFiles.Count > 0)
@@ -553,7 +580,7 @@ namespace CustomRadioStation
             XElement files = new("Files");
             for (int i = 0; i < musicFiles.Count; i++)
             {
-                files.Add(new XElement("Music", new XAttribute("FileName", musicFiles[i]), new XAttribute("Name", musicFilesNames[i]), new XAttribute("Volume", musicFilesVolume[i].ToString()), new XAttribute("Length", musicFilesLength[i].ToString()), new XAttribute("Condition", musicFilesCond[i])));
+                files.Add(new XElement("Music", new XAttribute("FileName", musicFiles[i]), new XAttribute("Name", musicFilesNames[i]), new XAttribute("Volume", musicFilesVolume[i].ToString()), new XAttribute("Condition", musicFilesCond[i])));
             }
             xSave.Add(files);
             xSave.Save(m_Path + "\\CustomRadioStation.xml");
@@ -563,16 +590,6 @@ namespace CustomRadioStation
         {
             using var processModule = Process.GetCurrentProcess().MainModule;
             m_Path = Path.GetDirectoryName(processModule?.FileName);
-
-            if (File.Exists(m_Path + "\\CustomRadioStation.xml"))
-            {
-                XDocument xSave = XDocument.Load(m_Path + "\\CustomRadioStation.xml");
-                IEnumerable<XElement> files = xSave.Element("Files").Elements("Music");
-                foreach (XElement music in files)
-                {
-                    AddMusic(music.Attribute("FileName").Value, float.Parse(music.Attribute("Volume").Value), int.Parse(music.Attribute("Length").Value), music.Attribute("Name")?.Value, music.Attribute("Condition")?.Value);
-                }
-            }
 
             Form3 form3 = new();
             if (form3.ShowDialog() == DialogResult.OK)
@@ -592,6 +609,16 @@ namespace CustomRadioStation
             if (gameType == GameType.FarCry6) pic = "hdr_6.jpg";
 
             pictureBox1.Image = System.Drawing.Image.FromStream(GetFromResourceData(pic));
+
+            if (File.Exists(m_Path + "\\CustomRadioStation.xml"))
+            {
+                XDocument xSave = XDocument.Load(m_Path + "\\CustomRadioStation.xml");
+                IEnumerable<XElement> files = xSave.Element("Files").Elements("Music");
+                foreach (XElement music in files)
+                {
+                    AddMusic(music.Attribute("FileName").Value, float.Parse(music.Attribute("Volume").Value), music.Attribute("Name")?.Value, music.Attribute("Condition")?.Value);
+                }
+            }
         }
 
         private void listView1_KeyDown(object sender, KeyEventArgs e)
@@ -629,6 +656,18 @@ namespace CustomRadioStation
             ZipArchiveEntry zipArchiveEntry = zipArchive.Entries.Where(a => a.FullName == file).FirstOrDefault();
 
             return zipArchiveEntry.Open();*/
+        }
+
+        private void copyVolumeToAllMusicFilesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (listView1.SelectedItems[0] != null)
+            {
+                for (int i = 0; i < musicFilesVolume.Count; i++)
+                {
+                    musicFilesVolume[i] = musicFilesVolume[listView1.SelectedItems[0].Index];
+                    listView1.Items[i].SubItems[1].Text = musicFilesVolume[i].ToString();
+                }
+            }
         }
     }
 }
