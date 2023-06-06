@@ -310,11 +310,11 @@ namespace CustomRadioStation
                     xPair2.Add(new XElement("Target", "soundbinary/" + cpBnkName + ".bnk"));
                     xInfoPairs.Add(xPair2);
 
-                    xInfoComputeData.Add(new XElement("Compute", new XAttribute("ID", cpBnkName), new XAttribute("Value", "CRS_Track_" + trackIDStr + "_Station_{RadioStation}_Soundbank"), new XAttribute("Process", "WwiseFNV")));
-                    xInfoComputeData.Add(new XElement("Compute", new XAttribute("ID", cpWemName), new XAttribute("Value", "CRS_Track_" + trackIDStr + "_Station_{RadioStation}_Audio"), new XAttribute("Process", "WwiseMediaID")));
-                    xInfoComputeData.Add(new XElement("Compute", new XAttribute("ID", cpID), new XAttribute("Value", "CRS_Track_" + trackIDStr + "_Station_{RadioStation}"), new XAttribute("Process", "WwiseFNV")));
+                    xInfoComputeData.Add(new XElement("Compute", new XAttribute("ID", cpBnkName.Replace("{", "").Replace("}", "")), new XAttribute("Value", "CRS_Track_" + trackIDStr + "_Station_{RadioStation}_Soundbank"), new XAttribute("Process", "WwiseFNV")));
+                    xInfoComputeData.Add(new XElement("Compute", new XAttribute("ID", cpWemName.Replace("{", "").Replace("}", "")), new XAttribute("Value", "CRS_Track_" + trackIDStr + "_Station_{RadioStation}_Audio"), new XAttribute("Process", "WwiseMediaID")));
+                    xInfoComputeData.Add(new XElement("Compute", new XAttribute("ID", cpID.Replace("{", "").Replace("}", "")), new XAttribute("Value", "CRS_Track_" + trackIDStr + "_Station_{RadioStation}"), new XAttribute("Process", "WwiseFNV")));
                     for (int k = 0; k < cpIntIds.Count; k++)
-                        xInfoComputeData.Add(new XElement("Compute", new XAttribute("ID", cpIntIds[k]), new XAttribute("Value", "CRS_Track_" + trackIDStr + "_Station_{RadioStation}_Internal_" + k.ToString()), new XAttribute("Process", "WwiseFNV")));
+                        xInfoComputeData.Add(new XElement("Compute", new XAttribute("ID", cpIntIds[k].Replace("{", "").Replace("}", "")), new XAttribute("Value", "CRS_Track_" + trackIDStr + "_Station_{RadioStation}_Internal_" + k.ToString()), new XAttribute("Process", "WwiseFNV")));
 
                     zip.CreateEntryFromFile(musicFiles[i], Path.GetFileName(musicFiles[i]));
                 }
