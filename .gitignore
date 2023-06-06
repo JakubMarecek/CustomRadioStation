@@ -11,3 +11,5 @@
 /bin_debug/net6.0-windows
 /PublishSign.bat
 /bin/net7.0-windows/win-x64
+/bin_debug/net7.0-windows/CustomRadioStation.dll
+/bin_debug/net7.0-windows/CustomRadioStation.pdb
