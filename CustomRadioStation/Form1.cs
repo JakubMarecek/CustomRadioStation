@@ -31,7 +31,8 @@ namespace CustomRadioStation
 {
     public partial class Form1 : Form
     {
-        public static string appName = "Custom Radio Station v2.00 by ArmanIII";
+        public static string appName = "Custom Radio Station v3.00 by ArmanIII";
+        public static string createdBy = "Package created using " + appName;
         GameType gameType;
         string m_Path = ""; // Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         readonly List<string> musicFiles = new();
@@ -156,6 +157,7 @@ namespace CustomRadioStation
                 xInfo.Element("PackageInfo").Element("Games").Element("Game").Value = game;
                 string desc = xInfo.Element("PackageInfo").Element("Description").Value;
                 desc = desc.Replace(":files:", fls);
+                desc = desc.Replace(":cred:", createdBy);
                 xInfo.Element("PackageInfo").Element("Description").Value = desc;
 
                 //string baseID = "1{RadioStation}";
@@ -442,9 +444,17 @@ namespace CustomRadioStation
             {
                 using (new CenterWinDialog(this))
                 {
-                    MessageBox.Show($"Error occurred during loading WEM file:{Environment.NewLine}{wf.ParseErrorStr}{Environment.NewLine}{Environment.NewLine}The error can be caused by wrong WEM encoding. Please convert WEM to correct encoding or select different WEM.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Error occurred during loading WEM file:{file}{Environment.NewLine}{wf.ParseErrorStr}{Environment.NewLine}{Environment.NewLine}The error can be caused by wrong WEM encoding. Please convert WEM to correct encoding or select different WEM.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 return;
+            }
+
+            if (wf.Channels > 1)
+            {
+                using (new CenterWinDialog(this))
+                {
+                    MessageBox.Show($"Selected WEM {file} contains more than 1 channel. Recommended is to use single channel audio for better 3D sound.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
 
             string fname = name ?? Path.GetFileNameWithoutExtension(file);

@@ -37,6 +37,8 @@ namespace CustomRadioStation
 
 		public int AudioLength { private set; get; }
 
+        public ushort Channels { get { return _channels; } }
+
         public bool LoadWEM(string file)
         {
 			if (!file.EndsWith(".wem"))

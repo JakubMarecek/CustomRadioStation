@@ -7,12 +7,13 @@
   <Description>
   [img]hdr.jpg[/img]
 
-  Adds custom radio station to the game.
+  Adds custom radio station to the game. The radio station is available right from begin of the game, no other actions are required.
+  
+  :cred:
   
   [size=2][color=::main:color::][b]List of music[/b][/color][/size]
   :files:
   
-  The radio station is available right after begin of the game, no other actions is required.
   </Description>
   <Options>
     <Option ID="RadioStation" name="Radio station">
