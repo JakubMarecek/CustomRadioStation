@@ -49,4 +49,7 @@
       <option name="Channel 30" value="29" />
     </Option>
   </Options>
+  <OnlyOnes>
+    <OnlyOne>CRS_Station_{RadioStation}</OnlyOne>
+  </OnlyOnes>
 </PackageInfo>
