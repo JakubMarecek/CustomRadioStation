@@ -2,9 +2,8 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-	  <ApplicationIcon>crs.ico</ApplicationIcon>
-    <TargetFramework>net7.0-windows</TargetFramework>
-    <UseWindowsForms>true</UseWindowsForms>
+	  <ApplicationIcon>Assets/crs.ico</ApplicationIcon>
+    <TargetFramework>net7.0</TargetFramework>
     <Copyright>Copyright © ArmanIII 2022</Copyright>
     <Company>ArmanIII</Company>
     <Product>Custom Radio Station</Product>
@@ -14,48 +13,78 @@
 	  <AssemblyTitle>Custom Radio Station</AssemblyTitle>
   </PropertyGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\hdr_6.jpg" />
-    <EmbeddedResource Include="Resources\hdr_nd.jpg" />
-    <EmbeddedResource Include="Resources\hdr.jpg" />
-    <EmbeddedResource Include="Resources\info_replace_6.xml" />
-    <EmbeddedResource Include="Resources\info_replace.xml" />
-    <EmbeddedResource Include="Resources\info.xml" />
-    <EmbeddedResource Include="Resources\sample_6.bnk" />
-    <EmbeddedResource Include="Resources\sample_nd.bnk" />
-    <EmbeddedResource Include="Resources\sample.bnk" />
-  </ItemGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
+		<PlatformTarget>x64</PlatformTarget>
+		<OutputPath>..\bin_debug\</OutputPath>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)'=='DebugLinux'">
+		<PlatformTarget>x64</PlatformTarget>
+		<OutputPath>..\bin_debug\</OutputPath>
+		<RuntimeIdentifier>linux-x64</RuntimeIdentifier>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+		<DefineConstants>$(DefineConstants);LINUXBUILD;</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)'=='Release'">
+		<PlatformTarget>x64</PlatformTarget>
+		<OutputPath>..\bin\</OutputPath>
+		<SelfContained>true</SelfContained>
+		<IncludeAllContentForSelfExtract>false</IncludeAllContentForSelfExtract>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<DebugType>None</DebugType>
+		<DebugSymbols>false</DebugSymbols>
+		<EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+		<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+		<PublishAot>true</PublishAot>
+
+		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)'=='ReleaseLinux'">
+		<PlatformTarget>x64</PlatformTarget>
+		<OutputPath>..\bin\</OutputPath>
+		<SelfContained>true</SelfContained>
+		<IncludeAllContentForSelfExtract>false</IncludeAllContentForSelfExtract>
+		<RuntimeIdentifier>linux-x64</RuntimeIdentifier>
+		<DebugType>None</DebugType>
+		<DebugSymbols>false</DebugSymbols>
+		<EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+		<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+		<PublishAot>true</PublishAot>
+
+		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+
+		<DefineConstants>$(DefineConstants);LINUXBUILD;</DefineConstants>
+	</PropertyGroup>
 
   <ItemGroup>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
+    <AvaloniaResource Include="Resources/hdr_6.jpg" />
+    <AvaloniaResource Include="Resources/hdr_nd.jpg" />
+    <AvaloniaResource Include="Resources/hdr.jpg" />
+    <AvaloniaResource Include="Resources/info_replace_6.xml" />
+    <AvaloniaResource Include="Resources/info_replace.xml" />
+    <AvaloniaResource Include="Resources/info.xml" />
+    <AvaloniaResource Include="Resources/sample_6.bnk" />
+    <AvaloniaResource Include="Resources/sample_nd.bnk" />
+    <AvaloniaResource Include="Resources/sample.bnk" />
+    <AvaloniaResource Include="Assets/**" />
   </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-	  <PlatformTarget>x64</PlatformTarget>
-	  <OutputPath>..\bin\</OutputPath>
-	  <DebugType>None</DebugType>
-	  <DebugSymbols>false</DebugSymbols>
-	  <PublishSingleFile>true</PublishSingleFile>
-	  <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-	  <SelfContained>false</SelfContained>
-
-	  <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <PlatformTarget>x64</PlatformTarget>
-    <OutputPath>..\bin_debug\</OutputPath>
-  </PropertyGroup>
-
+	<ItemGroup>
+		<PackageReference Include="Avalonia.Controls.ItemsRepeater" Version="11.0.4" />
+		<PackageReference Include="Avalonia.Desktop" Version="11.0.4" />
+		<PackageReference Include="Avalonia.Themes.Simple" Version="11.0.4" />
+		<PackageReference Include="Avalonia.Diagnostics" Version="11.0.4" />
+	</ItemGroup>
 </Project>

@@ -1,0 +1,156 @@
+<Window x:Class="CustomRadioStation.MainWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:globalData="using:CustomRadioStation"
+    xmlns:sys="using:System"
+    x:CompileBindings="True"
+    ExtendClientAreaToDecorationsHint="True"
+    ExtendClientAreaChromeHints="NoChrome"
+    ExtendClientAreaTitleBarHeightHint="-1"
+    xmlns:local="clr-namespace:CustomRadioStation" mc:Ignorable="d" Title="appName" Height="750" Width="570" MinHeight="500" MinWidth="500" Loaded="Window_Loaded"
+		WindowStartupLocation="CenterScreen" Icon="avares://CustomRadioStation/Assets/crs.ico" Closing="Window_Closing">
+
+	<Window.Styles>
+		<StyleInclude Source="avares://CustomRadioStation/Style.axaml" />
+	</Window.Styles>
+
+	<Grid>
+		<Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+
+
+
+
+			<Grid Background="#00000000" Margin="10,50,10,10">
+				<Image Source="avares://CustomRadioStation/Resources/hdr.jpg" Margin="0,0,0,0" Height="220" VerticalAlignment="Top" HorizontalAlignment="Center" />
+
+				<!--<ScrollViewer Margin="0,240,0,0">
+					<ItemsRepeater Name="mainList">
+						<ItemsRepeater.ItemTemplate>
+							<DataTemplate x:DataType="{x:Type globalData:ListEntry}">
+								<Grid Margin="0,2">
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition Width="300"></ColumnDefinition>
+										<ColumnDefinition Width="120"></ColumnDefinition>
+										<ColumnDefinition Width="120"></ColumnDefinition>
+										<ColumnDefinition Width="150"></ColumnDefinition>
+									</Grid.ColumnDefinitions>
+									<TextBlock Grid.Column="0" Margin="0,0,0,0" Text="{Binding FileName}" />
+									<TextBlock Grid.Column="1" Margin="0,0,0,0" Text="{Binding Volume}" />
+									<TextBlock Grid.Column="2" Margin="0,0,0,0" Text="{Binding Duration}" />
+									<TextBlock Grid.Column="3" Margin="0,0,0,0" Text="{Binding Condition}" />
+								</Grid>
+							</DataTemplate>
+						</ItemsRepeater.ItemTemplate>
+					</ItemsRepeater>
+				</ScrollViewer>-->
+
+				<ListBox Name="mainList" Margin="0,220,0,45">
+					<ListBox.Template>
+						<ControlTemplate>
+							<ScrollViewer HorizontalScrollBarVisibility="Visible">
+								<DockPanel LastChildFill="True">
+									<Grid DockPanel.Dock="Top">
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="300"></ColumnDefinition>
+											<ColumnDefinition Width="120"></ColumnDefinition>
+											<ColumnDefinition Width="120"></ColumnDefinition>
+											<ColumnDefinition Width="150"></ColumnDefinition>
+										</Grid.ColumnDefinitions>
+										<Label Grid.Column="0">Music file name</Label>
+										<Label Grid.Column="1">Music volume (dB)</Label>
+										<Label Grid.Column="2">Duration in seconds</Label>
+										<Label Grid.Column="3">Play condition</Label>
+									</Grid>
+									<ItemsPresenter></ItemsPresenter>
+								</DockPanel>
+							</ScrollViewer>
+						</ControlTemplate>
+					</ListBox.Template>
+					<ListBox.ItemTemplate>
+						<DataTemplate x:DataType="{x:Type globalData:ListEntry}">
+							<Grid Margin="0,2">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="300"></ColumnDefinition>
+									<ColumnDefinition Width="120"></ColumnDefinition>
+									<ColumnDefinition Width="120"></ColumnDefinition>
+									<ColumnDefinition Width="150"></ColumnDefinition>
+								</Grid.ColumnDefinitions>
+								<TextBlock Grid.Column="0" Margin="0,0,0,0" Text="{Binding FileName}" />
+								<TextBlock Grid.Column="1" Margin="0,0,0,0" Text="{Binding Volume}" />
+								<TextBlock Grid.Column="2" Margin="0,0,0,0" Text="{Binding Duration}" />
+								<TextBlock Grid.Column="3" Margin="0,0,0,0" Text="{Binding Condition}" />
+							</Grid>
+						</DataTemplate>
+					</ListBox.ItemTemplate>
+				</ListBox>
+
+				<Button Classes="CBtn" Content="Create package" Click="button1_Click" Margin="0,0,0,0" Width="150" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
+				<Button Classes="CBtn" Content="Remove selected" Click="button2_Click" Margin="0,0,180,0" Width="150" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
+				<Button Classes="CBtn" Content="Add music" Click="button3_Click" Margin="0,0,360,0" Width="150" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
+			</Grid>
+
+
+
+
+
+
+			<Grid Width="NaN" Background="Black" HorizontalAlignment="Center" VerticalAlignment="Top" Name="gridNoticeNote" Opacity="0" Margin="0,40,0,0">
+				<Grid Background="#77000000">
+					<Label Name="noticeNote" Content="a notice text" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="White" />
+				</Grid>
+				<Grid.Transitions>
+					<Transitions>
+						<DoubleTransition Property="Opacity" Duration="0:0:0.2"/>
+					</Transitions>
+				</Grid.Transitions>
+			</Grid>
+			<Grid Background="#cc000000" Name="gridException" IsVisible="false" Opacity="0">
+				<Label Content="An exception occured" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="40" Margin="50,50,0,0" FontWeight="Bold" Foreground="Red" />
+				<Label Content="Please report this to the author." VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="20" Margin="50,120,0,0" Foreground="White" />
+				<TextBlock Text="__err__" Name="excLabel" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="16" Margin="80,170,80,0" MaxWidth="{Binding Bounds.Width, ElementName=gridException}" TextWrapping="Wrap" Foreground="White" />
+				<Grid.Transitions>
+					<Transitions>
+						<DoubleTransition Property="Opacity" Duration="0:0:0.2"/>
+					</Transitions>
+				</Grid.Transitions>
+			</Grid>
+			<Grid Background="#99000000" Name="gridDialogInfo" IsVisible="false" Opacity="0">
+				<Grid VerticalAlignment="Center" HorizontalAlignment="Center" Width="500">
+					<Border Classes="DialogRect" />
+					<Label Content="Info" Name="dialogInfoName" Classes="Header" />
+					<TextBlock Text="Some description." Name="dialogInfoLabel" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="16" Margin="30,65,30,60" MaxWidth="{Binding Bounds.Width, ElementName=gridDialogInfo}" TextWrapping="Wrap" Foreground="White" />
+					<Button Classes="CBtn" Content="Close" Click="ButtonDialogInfoClose_Click" Margin="0,0,10,10" Width="100" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
+				</Grid>
+				<Grid.Transitions>
+					<Transitions>
+						<DoubleTransition Property="Opacity" Duration="0:0:0.2"/>
+					</Transitions>
+				</Grid.Transitions>
+			</Grid>
+			<Grid Background="#99000000" Name="gridDialogAsk" IsVisible="false" Opacity="0">
+				<Grid VerticalAlignment="Center" HorizontalAlignment="Center" Width="500">
+					<Border Classes="DialogRect" />
+					<Label Name="dialogAskName" Content="--name--" Classes="Header" />
+					<TextBlock Name="dialogAskDesc" Text="--desc--" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="16" Margin="30,65,80,80" MaxWidth="{Binding Bounds.Width, ElementName=gridDialogAsk}" TextWrapping="Wrap" Foreground="White" />
+					<Button Classes="CBtn" Content="Yes" Click="ButtonDialogAskClose_Click" Tag="1" Margin="0,0,120,10" Width="100" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
+					<Button Classes="CBtn" Content="No" Click="ButtonDialogAskClose_Click" Tag="0" Margin="0,0,10,10" Width="100" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
+				</Grid>
+				<Grid.Transitions>
+					<Transitions>
+						<DoubleTransition Property="Opacity" Duration="0:0:0.2"/>
+					</Transitions>
+				</Grid.Transitions>
+			</Grid>
+		</Grid>
+
+		<Grid Background="#cc000000" Height="40" HorizontalAlignment="Stretch" VerticalAlignment="Top" PointerPressed="MoveWnd">
+			<Label Content="Wnd title" Name="wndTitle" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="15" Foreground="#ccc" FontWeight="Bold" Margin="10,0,0,0" />
+			<Button Classes="EditBtn CloseBtnWhite SettBtnWhite" Click="ButtonChrome_Click" Tag="3" Margin="0,0,130,0" Name="chromeBtnSettings" IsVisible="false" />
+			<Button Classes="EditBtn CloseBtnWhite MinBtnWhite" Click="ButtonChrome_Click" Tag="2" Margin="0,0,90,0" />
+			<Button Classes="EditBtn CloseBtnWhite MaxBtnWhite" Click="ButtonChrome_Click" Tag="1" Margin="0,0,50,0" />
+			<Button Classes="EditBtn CloseBtnWhite" Click="ButtonChrome_Click" Tag="0" Margin="0,0,10,0" />
+		</Grid>
+	</Grid>
+</Window>

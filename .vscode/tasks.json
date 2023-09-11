@@ -1,0 +1,57 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "build",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"build",
+				"${workspaceFolder}/CustomRadioStation/CustomRadioStation.csproj",
+				"/property:GenerateFullPaths=true",
+				"/consoleloggerparameters:NoSummary",
+				"-c",
+				"Debug"
+			],
+			"problemMatcher": "$msCompile"
+		},
+		{
+			"label": "buildLinux",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"build",
+				"${workspaceFolder}/CustomRadioStation/CustomRadioStation.csproj",
+				"/property:GenerateFullPaths=true",
+				"/consoleloggerparameters:NoSummary",
+				"-c",
+				"DebugLinux"
+			],
+			"problemMatcher": "$msCompile"
+		},
+		{
+			"label": "publish",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"publish",
+				"${workspaceFolder}/CustomRadioStation/CustomRadioStation.csproj",
+				"/property:GenerateFullPaths=true",
+				"/consoleloggerparameters:NoSummary"
+			],
+			"problemMatcher": "$msCompile"
+		},
+		{
+			"label": "watch",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"watch",
+				"run",
+				"--project",
+				"${workspaceFolder}/CustomRadioStation/CustomRadioStation.csproj"
+			],
+			"problemMatcher": "$msCompile"
+		}
+	]
+}
