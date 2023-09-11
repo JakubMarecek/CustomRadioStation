@@ -3,15 +3,5 @@
   <PropertyGroup>
     <_LastSelectedProfileId>D:\Documents\fc4_fc5_tools\FC5CustomRadioStation\CustomRadioStation\Properties\PublishProfiles\FolderProfile.pubxml</_LastSelectedProfileId>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Update="Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="Form2.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="Form3.cs">
-      <SubType>Form</SubType>
-    </Compile>
-  </ItemGroup>
+  <ItemGroup />
 </Project>

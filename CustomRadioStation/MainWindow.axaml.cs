@@ -20,6 +20,8 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -34,6 +36,8 @@ namespace CustomRadioStation
 {
     public partial class MainWindow : Window
     {
+        GameType gameType;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -97,20 +101,9 @@ namespace CustomRadioStation
             {
                 Close();
             }
-            if (tag == "1")
-            {
-                if (WindowState == WindowState.Maximized)
-                    WindowState = WindowState.Normal;
-                else
-                    WindowState = WindowState.Maximized;
-            }
             if (tag == "2")
             {
                 WindowState = WindowState.Minimized;
-            }
-            if (tag == "3")
-            {
-                //Animation(true, gridDialogSettings);
             }
         }
 
@@ -143,12 +136,6 @@ namespace CustomRadioStation
                 BeginMoveDrag(e);
                 Cursor = new Cursor(StandardCursorType.Arrow);
             }
-
-            if (props.IsLeftButtonPressed && e.ClickCount == 2)
-                if (WindowState == WindowState.Normal)
-                    WindowState = WindowState.Maximized;
-                else if (WindowState == WindowState.Maximized)
-                    WindowState = WindowState.Normal;
         }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
@@ -161,6 +148,38 @@ namespace CustomRadioStation
 
         private void Window_Closing(object sender, WindowClosingEventArgs e)
         {
+        }
+
+        private void buttonSelGame_Click(object sender, RoutedEventArgs e)
+        {
+            string tag = (string)((Button)sender).Tag;
+
+            string picName = "";
+
+            if (tag == "0")
+            {
+                gameType = GameType.FarCry5;
+                picName = "hdr";
+            }
+
+            if (tag == "1")
+            {
+                gameType = GameType.FarCryNewDawn;
+                picName = "hdr_nd";
+            }
+
+            if (tag == "2")
+            {
+                gameType = GameType.FarCry6;
+                picName = "hdr_6";
+            }
+
+            Stream stream = AssetLoader.Open(new Uri("avares://" + GetType().Assembly.GetName().Name + "/Resources/" + picName + ".jpg"));
+            var bitmap = new Bitmap(stream);
+            headerPic.Source = bitmap;
+
+            Animation(false, selGameGrid);
+            Animation(true, mainGrid);
         }
 
         private void button1_Click(object sender, RoutedEventArgs e)

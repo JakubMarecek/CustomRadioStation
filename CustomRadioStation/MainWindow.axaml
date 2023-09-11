@@ -9,8 +9,8 @@
     ExtendClientAreaToDecorationsHint="True"
     ExtendClientAreaChromeHints="NoChrome"
     ExtendClientAreaTitleBarHeightHint="-1"
-    xmlns:local="clr-namespace:CustomRadioStation" mc:Ignorable="d" Title="appName" Height="750" Width="570" MinHeight="500" MinWidth="500" Loaded="Window_Loaded"
-		WindowStartupLocation="CenterScreen" Icon="avares://CustomRadioStation/Assets/crs.ico" Closing="Window_Closing">
+    xmlns:local="clr-namespace:CustomRadioStation" mc:Ignorable="d" Title="appName" Height="750" Width="570" Loaded="Window_Loaded"
+		WindowStartupLocation="CenterScreen" Icon="avares://CustomRadioStation/Assets/crs.ico" Closing="Window_Closing" CanResize="False">
 
 	<Window.Styles>
 		<StyleInclude Source="avares://CustomRadioStation/Style.axaml" />
@@ -19,11 +19,25 @@
 	<Grid>
 		<Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
 
+			<Grid Background="#00000000" Margin="10,50,10,10" Name="selGameGrid">
+				<Image Source="avares://CustomRadioStation/Assets/crs.png" Margin="0,50,0,0" Width="100" Height="100" VerticalAlignment="Top" HorizontalAlignment="Center" RenderOptions.BitmapInterpolationMode="HighQuality" />
+				<Label Content="Custom Radio Station" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="30" Margin="0,160,0,0" FontWeight="Bold" Foreground="White" />
+				<Label Content="v3.0" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="20" Margin="0,210,0,0" FontWeight="Bold" Foreground="LightGray" />
+				<TextBlock Text="Select a game for that you want to create custom radio station:" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="16" Margin="0,320,0,0" MaxWidth="{Binding Bounds.Width, ElementName=selGameGrid}" TextWrapping="Wrap" Foreground="White" />
 
+				<Button Classes="CBtn" Click="buttonSelGame_Click" Tag="0" Content="Far Cry 5" Margin="0,370,0,0" Width="230" VerticalAlignment="Top" HorizontalAlignment="Center" />
+				<Button Classes="CBtn" Click="buttonSelGame_Click" Tag="1" Content="Far Cry New Dawn" Margin="0,420,0,0" Width="230" VerticalAlignment="Top" HorizontalAlignment="Center" />
+				<Button Classes="CBtn" Click="buttonSelGame_Click" Tag="2" Content="Far Cry 6" Margin="0,470,0,0" Width="230" VerticalAlignment="Top" HorizontalAlignment="Center" />
 
+				<Grid.Transitions>
+					<Transitions>
+						<DoubleTransition Property="Opacity" Duration="0:0:0.2"/>
+					</Transitions>
+				</Grid.Transitions>
+			</Grid>
 
-			<Grid Background="#00000000" Margin="10,50,10,10">
-				<Image Source="avares://CustomRadioStation/Resources/hdr.jpg" Margin="0,0,0,0" Height="220" VerticalAlignment="Top" HorizontalAlignment="Center" />
+			<Grid Background="#00000000" Margin="10,50,10,10" Name="mainGrid" IsVisible="false" Opacity="0">
+				<Image Source="avares://CustomRadioStation/Resources/hdr.jpg" Name="headerPic" Margin="0,0,0,0" Height="220" VerticalAlignment="Top" HorizontalAlignment="Center" RenderOptions.BitmapInterpolationMode="HighQuality" />
 
 				<!--<ScrollViewer Margin="0,240,0,0">
 					<ItemsRepeater Name="mainList">
@@ -58,10 +72,10 @@
 											<ColumnDefinition Width="120"></ColumnDefinition>
 											<ColumnDefinition Width="150"></ColumnDefinition>
 										</Grid.ColumnDefinitions>
-										<Label Grid.Column="0">Music file name</Label>
-										<Label Grid.Column="1">Music volume (dB)</Label>
-										<Label Grid.Column="2">Duration in seconds</Label>
-										<Label Grid.Column="3">Play condition</Label>
+										<Label Grid.Column="0" Classes="ListHeader">Music file name</Label>
+										<Label Grid.Column="1" Classes="ListHeader">Music volume (dB)</Label>
+										<Label Grid.Column="2" Classes="ListHeader">Duration in seconds</Label>
+										<Label Grid.Column="3" Classes="ListHeader">Play condition</Label>
 									</Grid>
 									<ItemsPresenter></ItemsPresenter>
 								</DockPanel>
@@ -77,23 +91,25 @@
 									<ColumnDefinition Width="120"></ColumnDefinition>
 									<ColumnDefinition Width="150"></ColumnDefinition>
 								</Grid.ColumnDefinitions>
-								<TextBlock Grid.Column="0" Margin="0,0,0,0" Text="{Binding FileName}" />
-								<TextBlock Grid.Column="1" Margin="0,0,0,0" Text="{Binding Volume}" />
-								<TextBlock Grid.Column="2" Margin="0,0,0,0" Text="{Binding Duration}" />
-								<TextBlock Grid.Column="3" Margin="0,0,0,0" Text="{Binding Condition}" />
+								<TextBlock Grid.Column="0" Margin="0,0,0,0" Classes="ListTB" Text="{Binding FileName}" />
+								<TextBlock Grid.Column="1" Margin="0,0,0,0" Classes="ListTB" Text="{Binding Volume}" />
+								<TextBlock Grid.Column="2" Margin="0,0,0,0" Classes="ListTB" Text="{Binding Duration}" />
+								<TextBlock Grid.Column="3" Margin="0,0,0,0" Classes="ListTB" Text="{Binding Condition}" />
 							</Grid>
 						</DataTemplate>
 					</ListBox.ItemTemplate>
 				</ListBox>
 
-				<Button Classes="CBtn" Content="Create package" Click="button1_Click" Margin="0,0,0,0" Width="150" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
-				<Button Classes="CBtn" Content="Remove selected" Click="button2_Click" Margin="0,0,180,0" Width="150" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
-				<Button Classes="CBtn" Content="Add music" Click="button3_Click" Margin="0,0,360,0" Width="150" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
+				<Button Classes="CBtn" Content="Create package" Click="button1_Click" Margin="0,0,0,0" Width="160" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
+				<Button Classes="CBtn" Content="Remove selected" Click="button2_Click" Margin="0,0,0,0" Width="160" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
+				<Button Classes="CBtn" Content="Add music" Click="button3_Click" Margin="0,0,0,0" Width="160" VerticalAlignment="Bottom" HorizontalAlignment="Left" />
+
+				<Grid.Transitions>
+					<Transitions>
+						<DoubleTransition Property="Opacity" Duration="0:0:0.2"/>
+					</Transitions>
+				</Grid.Transitions>
 			</Grid>
-
-
-
-
 
 
 			<Grid Width="NaN" Background="Black" HorizontalAlignment="Center" VerticalAlignment="Top" Name="gridNoticeNote" Opacity="0" Margin="0,40,0,0">
@@ -147,9 +163,7 @@
 
 		<Grid Background="#cc000000" Height="40" HorizontalAlignment="Stretch" VerticalAlignment="Top" PointerPressed="MoveWnd">
 			<Label Content="Wnd title" Name="wndTitle" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="15" Foreground="#ccc" FontWeight="Bold" Margin="10,0,0,0" />
-			<Button Classes="EditBtn CloseBtnWhite SettBtnWhite" Click="ButtonChrome_Click" Tag="3" Margin="0,0,130,0" Name="chromeBtnSettings" IsVisible="false" />
-			<Button Classes="EditBtn CloseBtnWhite MinBtnWhite" Click="ButtonChrome_Click" Tag="2" Margin="0,0,90,0" />
-			<Button Classes="EditBtn CloseBtnWhite MaxBtnWhite" Click="ButtonChrome_Click" Tag="1" Margin="0,0,50,0" />
+			<Button Classes="EditBtn CloseBtnWhite MinBtnWhite" Click="ButtonChrome_Click" Tag="2" Margin="0,0,50,0" />
 			<Button Classes="EditBtn CloseBtnWhite" Click="ButtonChrome_Click" Tag="0" Margin="0,0,10,0" />
 		</Grid>
 	</Grid>

@@ -16,6 +16,15 @@
 		<Setter Property="FontFamily" Value="{StaticResource MainFont}" />
 	</Style>
 
+	<Style Selector="Label.ListHeader">
+		<Setter Property="FontSize" Value="15"/>
+		<Setter Property="FontWeight" Value="Bold"/>
+	</Style>
+
+	<Style Selector="TextBlock.ListTB">
+		<Setter Property="FontSize" Value="14"/>
+	</Style>
+
 	<Style Selector="Label.Header">
 		<Setter Property="FontFamily" Value="{StaticResource MainFont}" />
 		<Setter Property="VerticalAlignment" Value="Top"/>
