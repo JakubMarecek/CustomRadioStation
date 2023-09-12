@@ -12,9 +12,9 @@ namespace CustomRadioStation
         [STAThread]
         public static void Main(string[] args)
         {
+                BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
             try
             {
-                BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
             }
             catch (Exception ex)
             {

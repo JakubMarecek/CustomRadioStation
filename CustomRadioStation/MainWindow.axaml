@@ -22,7 +22,7 @@
 			<Grid Background="#00000000" Margin="10,50,10,10" Name="selGameGrid">
 				<Image Source="avares://CustomRadioStation/Assets/crs.png" Margin="0,50,0,0" Width="100" Height="100" VerticalAlignment="Top" HorizontalAlignment="Center" RenderOptions.BitmapInterpolationMode="HighQuality" />
 				<Label Content="Custom Radio Station" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="30" Margin="0,160,0,0" FontWeight="Bold" Foreground="White" />
-				<Label Content="v3.0" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="20" Margin="0,210,0,0" FontWeight="Bold" Foreground="LightGray" />
+				<Label Content="v3.0" Name="verLabel" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="20" Margin="0,210,0,0" FontWeight="Bold" Foreground="LightGray" />
 				<TextBlock Text="Select a game for that you want to create custom radio station:" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="16" Margin="0,320,0,0" MaxWidth="{Binding Bounds.Width, ElementName=selGameGrid}" TextWrapping="Wrap" Foreground="White" />
 
 				<Button Classes="CBtn" Click="buttonSelGame_Click" Tag="0" Content="Far Cry 5" Margin="0,370,0,0" Width="230" VerticalAlignment="Top" HorizontalAlignment="Center" />
@@ -60,7 +60,7 @@
 					</ItemsRepeater>
 				</ScrollViewer>-->
 
-				<ListBox Name="mainList" Margin="0,220,0,45">
+				<ListBox Name="mainList" Margin="0,220,0,45" SelectionMode="Multiple" DragDrop.AllowDrop="True" KeyDown="listView1_KeyDown">
 					<ListBox.Template>
 						<ControlTemplate>
 							<ScrollViewer HorizontalScrollBarVisibility="Visible">
@@ -84,17 +84,17 @@
 					</ListBox.Template>
 					<ListBox.ItemTemplate>
 						<DataTemplate x:DataType="{x:Type globalData:ListEntry}">
-							<Grid Margin="0,2">
+							<Grid Margin="0,2" ToolTip.Tip="{Binding Tooltip}" ToolTip.ShowDelay="100" PointerPressed="listView1_MouseDoubleClick">
 								<Grid.ColumnDefinitions>
 									<ColumnDefinition Width="300"></ColumnDefinition>
 									<ColumnDefinition Width="120"></ColumnDefinition>
 									<ColumnDefinition Width="120"></ColumnDefinition>
 									<ColumnDefinition Width="150"></ColumnDefinition>
 								</Grid.ColumnDefinitions>
-								<TextBlock Grid.Column="0" Margin="0,0,0,0" Classes="ListTB" Text="{Binding FileName}" />
+								<TextBlock Grid.Column="0" Margin="0,0,0,0" Classes="ListTB" Text="{Binding Name}" />
 								<TextBlock Grid.Column="1" Margin="0,0,0,0" Classes="ListTB" Text="{Binding Volume}" />
 								<TextBlock Grid.Column="2" Margin="0,0,0,0" Classes="ListTB" Text="{Binding Duration}" />
-								<TextBlock Grid.Column="3" Margin="0,0,0,0" Classes="ListTB" Text="{Binding Condition}" />
+								<TextBlock Grid.Column="3" Margin="0,0,0,0" Classes="ListTB" Text="{Binding ConditionR}" />
 							</Grid>
 						</DataTemplate>
 					</ListBox.ItemTemplate>
@@ -111,6 +111,46 @@
 				</Grid.Transitions>
 			</Grid>
 
+			<Grid Background="#99000000" Name="gridDialogProps">
+				<Grid VerticalAlignment="Center" HorizontalAlignment="Center" Width="500" Height="470">
+					<!-- IsVisible="false" Opacity="0"-->
+					<Border Classes="DialogRect" />
+					<Label Content="Edit params of music" Classes="Header" />
+					
+					<TextBlock Text="Edit params of selected music:" Classes="PropsDialogTB" Margin="10,65,0,0" FontWeight="Bold" />
+					<Grid Margin="10,100,10,0" ColumnDefinitions="*,*">
+						<TextBlock Grid.Column="0" Margin="0,5,0,0" Text="Name of the music in package" Classes="PropsDialogTB" />
+						<TextBox Grid.Column="1" Name="propName" />
+					</Grid>
+					<Grid Margin="10,140,10,0" ColumnDefinitions="*,*">
+						<TextBlock Grid.Column="0" Margin="0,5,0,0" Text="Music volume in decibels (dB)" Classes="PropsDialogTB" />
+						<NumericUpDown Grid.Column="1" Name="propVolume" Value="0" Minimum="-20" Maximum="20" Increment="1" FormatString="0" Margin="0,0,0,0" />
+					</Grid>
+					<Grid Margin="10,180,10,0" ColumnDefinitions="*,*">
+						<TextBlock Grid.Column="0" Margin="0,5,0,0" Text="Music length in seconds" Classes="PropsDialogTB" />
+						<NumericUpDown Grid.Column="1" Name="propLength" Value="1" Minimum="1" Maximum="10000" Increment="1" FormatString="0" Margin="0,0,0,0" />
+					</Grid>
+
+					<TextBlock Text="Play condition (hours are including):" Classes="PropsDialogTB" Margin="10,250,0,0" FontWeight="Bold" />
+					<CheckBox Content=" Play only during night time (7 PM to 5 AM)" Name="propOnlyNight" Margin="20,280,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+					<Grid Margin="10,320,10,0" ColumnDefinitions="*,*">
+						<TextBlock Grid.Column="0" Margin="0,5,0,0" Text="Minimum hour to play" Classes="PropsDialogTB" />
+						<NumericUpDown Grid.Column="1" Name="propMinHour" Value="0" Minimum="0" Maximum="23" Increment="1" FormatString="0" Margin="0,0,0,0" />
+					</Grid>
+					<Grid Margin="10,360,10,0" ColumnDefinitions="*,*">
+						<TextBlock Grid.Column="0" Margin="0,5,0,0" Text="Maxmimum hour to play" Classes="PropsDialogTB" />
+						<NumericUpDown Grid.Column="1" Name="propMaxHour" Value="0" Minimum="0" Maximum="23" Increment="1" FormatString="0" Margin="0,0,0,0" />
+					</Grid>
+
+					<Button Classes="CBtn" Content="Save" Click="ButtonDialogProps_Click" Tag="0" Margin="0,0,120,10" Width="100" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
+					<Button Classes="CBtn" Content="Cancel" Click="ButtonDialogProps_Click" Tag="1" Margin="0,0,10,10" Width="100" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
+				</Grid>
+				<Grid.Transitions>
+					<Transitions>
+						<DoubleTransition Property="Opacity" Duration="0:0:0.2"/>
+					</Transitions>
+				</Grid.Transitions>
+			</Grid>
 
 			<Grid Width="NaN" Background="Black" HorizontalAlignment="Center" VerticalAlignment="Top" Name="gridNoticeNote" Opacity="0" Margin="0,40,0,0">
 				<Grid Background="#77000000">
