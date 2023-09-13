@@ -744,13 +744,13 @@ namespace CustomRadioStation
                 }
             }
 
-            if (e.ClickCount == 1 && props.IsRightButtonPressed)
+            /*if (e.ClickCount == 1 && props.IsRightButtonPressed)
             {
                 if (mainList.SelectedIndex != -1 && mainList.SelectedIndex < entries.Count)
                 {
                     //contextMenuStrip1.Show(Cursor.Position);
                 }
-            }
+            }*/
         }
 
         private void ButtonDialogProps_Click(object sender, RoutedEventArgs e)
@@ -797,16 +797,21 @@ namespace CustomRadioStation
             Process.Start(ps);
         }*/
 
-        /*private void copyVolumeToAllMusicFilesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void copyVolumeToAllMusicFilesToolStripMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (listView1.SelectedItems[0] != null)
+            int sel = mainList.SelectedIndex;
+
+            if (sel != -1 && sel < entries.Count)
             {
-                for (int i = 0; i < musicFilesVolume.Count; i++)
+                for (int i = 0; i < entries.Count; i++)
                 {
-                    musicFilesVolume[i] = musicFilesVolume[listView1.SelectedItems[0].Index];
-                    listView1.Items[i].SubItems[1].Text = musicFilesVolume[i].ToString();
+                    var entry = entries[i];
+                    entry.Volume = entries[sel].Volume;
+                    entries[i] = entry;
+
+                    //listView1.Items[i].SubItems[1].Text = musicFilesVolume[i].ToString();
                 }
             }
-        }*/
+        }
     }
 }
