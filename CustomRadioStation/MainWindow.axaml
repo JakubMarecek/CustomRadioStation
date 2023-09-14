@@ -20,14 +20,18 @@
 		<Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
 
 			<Grid Background="#00000000" Margin="10,50,10,10" Name="selGameGrid">
-				<Image Source="avares://CustomRadioStation/Assets/crs.png" Margin="0,50,0,0" Width="100" Height="100" VerticalAlignment="Top" HorizontalAlignment="Center" RenderOptions.BitmapInterpolationMode="HighQuality" />
-				<Label Content="Custom Radio Station" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="30" Margin="0,160,0,0" FontWeight="Bold" Foreground="White" />
-				<Label Content="v3.0" Name="verLabel" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="20" Margin="0,210,0,0" FontWeight="Bold" Foreground="LightGray" />
-				<TextBlock Text="Select a game for that you want to create custom radio station:" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="16" Margin="0,320,0,0" MaxWidth="{Binding Bounds.Width, ElementName=selGameGrid}" TextWrapping="Wrap" Foreground="White" />
+				<Grid Margin="0,75,0,0">
+					<Image Source="avares://CustomRadioStation/Assets/crs.png" Margin="0,0,0,0" Width="100" Height="100" VerticalAlignment="Top" HorizontalAlignment="Center" RenderOptions.BitmapInterpolationMode="HighQuality" />
+					<Label Content="Custom Radio Station" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="30" Margin="0,110,0,0" FontWeight="Bold" Foreground="White" />
+					<Label Content="v3.0" Name="verLabel" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="20" Margin="0,160,0,0" FontWeight="Bold" Foreground="LightGray" />
+					<TextBlock Text="Select a game for that you want to create custom radio station:" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="16" Margin="0,270,0,0" MaxWidth="{Binding Bounds.Width, ElementName=selGameGrid}" TextWrapping="Wrap" Foreground="White" />
 
-				<Button Classes="CBtn" Click="buttonSelGame_Click" Tag="0" Content="Far Cry 5" Margin="0,370,0,0" Width="230" VerticalAlignment="Top" HorizontalAlignment="Center" />
-				<Button Classes="CBtn" Click="buttonSelGame_Click" Tag="1" Content="Far Cry New Dawn" Margin="0,420,0,0" Width="230" VerticalAlignment="Top" HorizontalAlignment="Center" />
-				<Button Classes="CBtn" Click="buttonSelGame_Click" Tag="2" Content="Far Cry 6" Margin="0,470,0,0" Width="230" VerticalAlignment="Top" HorizontalAlignment="Center" />
+					<Button Classes="CBtn" Click="buttonSelGame_Click" Tag="0" Content="Far Cry 5" Margin="0,320,0,0" Width="230" VerticalAlignment="Top" HorizontalAlignment="Center" />
+					<Button Classes="CBtn" Click="buttonSelGame_Click" Tag="1" Content="Far Cry New Dawn" Margin="0,370,0,0" Width="230" VerticalAlignment="Top" HorizontalAlignment="Center" />
+					<Button Classes="CBtn" Click="buttonSelGame_Click" Tag="2" Content="Far Cry 6" Margin="0,420,0,0" Width="230" VerticalAlignment="Top" HorizontalAlignment="Center" />
+				
+					<Label Content="Far Cry Modding Community" VerticalAlignment="Bottom" HorizontalAlignment="Center" FontSize="17" Margin="0,0,0,10" Foreground="#777" />
+				</Grid>
 
 				<Grid.Transitions>
 					<Transitions>
@@ -60,7 +64,7 @@
 					</ItemsRepeater>
 				</ScrollViewer>-->
 
-				<ListBox Name="mainList" Margin="0,220,0,45" SelectionMode="Multiple" DragDrop.AllowDrop="True" KeyDown="listView1_KeyDown">
+				<ListBox Name="mainList" Margin="0,220,0,80" SelectionMode="Multiple" DragDrop.AllowDrop="True" KeyDown="listView1_KeyDown">
 					<ListBox.Template>
 						<ControlTemplate>
 							<ScrollViewer HorizontalScrollBarVisibility="Visible">
@@ -105,6 +109,8 @@
 					</ListBox.ContextMenu>
 				</ListBox>
 
+				<TextBlock Text="How to convert WAV to WEM in Wwise" Classes="SmallTextLink" Margin="0,615,0,0" HorizontalAlignment="Left" PointerReleased="link_PointerReleased" />
+
 				<Button Classes="CBtn" Content="Create package" Click="button1_Click" Margin="0,0,0,0" Width="160" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
 				<Button Classes="CBtn" Content="Remove selected" Click="button2_Click" Margin="0,0,0,0" Width="160" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
 				<Button Classes="CBtn" Content="Add music" Click="button3_Click" Margin="0,0,0,0" Width="160" VerticalAlignment="Bottom" HorizontalAlignment="Left" />
@@ -137,7 +143,7 @@
 					</Grid>
 
 					<TextBlock Text="Play condition (hours are including):" Classes="PropsDialogTB" Margin="10,250,0,0" FontWeight="Bold" />
-					<CheckBox Content=" Play only during night time (7 PM to 5 AM)" Name="propOnlyNight" Margin="20,280,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+					<CheckBox Content=" Play only during night time (7 PM to 5 AM)" Name="propOnlyNight" Margin="20,280,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Checked="checkBox1_Checked" Unchecked="checkBox1_Unchecked" /> <!-- Click="checkBox1_CheckedChanged"-->
 					<Grid Margin="10,320,10,0" ColumnDefinitions="*,*">
 						<TextBlock Grid.Column="0" Margin="0,5,0,0" Text="Minimum hour to play" Classes="PropsDialogTB" />
 						<NumericUpDown Grid.Column="1" Name="propMinHour" Value="0" Minimum="0" Maximum="23" Increment="1" FormatString="0" Margin="0,0,0,0" />

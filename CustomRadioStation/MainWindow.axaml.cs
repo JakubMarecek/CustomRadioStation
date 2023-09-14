@@ -32,6 +32,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
@@ -787,16 +788,6 @@ namespace CustomRadioStation
             }
         }
 
-        /*private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            var ps = new ProcessStartInfo("https://youtu.be/O5UxULDT8_4")
-            {
-                UseShellExecute = true,
-                Verb = "open"
-            };
-            Process.Start(ps);
-        }*/
-
         private void copyVolumeToAllMusicFilesToolStripMenuItem_Click(object sender, RoutedEventArgs e)
         {
             int sel = mainList.SelectedIndex;
@@ -810,6 +801,63 @@ namespace CustomRadioStation
                     entries[i] = entry;
 
                     //listView1.Items[i].SubItems[1].Text = musicFilesVolume[i].ToString();
+                }
+            }
+        }
+
+        /*private void checkBox1_CheckedChanged(object sender, RoutedEventArgs e)
+        {
+            if (propOnlyNight.IsChecked == true)
+            {
+                propMinHour.IsEnabled = false;
+                propMaxHour.IsEnabled = false;
+            }
+            else
+            {
+                propMinHour.IsEnabled = true;
+                propMaxHour.IsEnabled = true;
+            }
+        }*/
+
+        private void checkBox1_Unchecked(object sender, RoutedEventArgs e)
+        {
+            propMinHour.IsEnabled = true;
+            propMaxHour.IsEnabled = true;
+        }
+
+        private void checkBox1_Checked(object sender, RoutedEventArgs e)
+        {
+            propMinHour.IsEnabled = false;
+            propMaxHour.IsEnabled = false;
+        }
+
+        private void link_PointerReleased(object sender, PointerReleasedEventArgs e)
+        {
+            string url = "https://youtu.be/O5UxULDT8_4";
+
+            try
+            {
+                Process.Start(url);
+            }
+            catch
+            {
+                // hack because of this: https://github.com/dotnet/corefx/issues/10361
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    url = url.Replace("&", "^&");
+                    Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    Process.Start("xdg-open", url);
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    Process.Start("open", url);
+                }
+                else
+                {
+                    throw;
                 }
             }
         }
