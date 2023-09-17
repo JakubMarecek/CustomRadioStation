@@ -243,6 +243,8 @@ namespace CustomRadioStation
             for (int i = 0; i < 100; i++)
                 list.Add(new() { FileName = "File Name", Volume = "-5", Duration = "158", Condition = "0" });
             mainList.ItemsSource = list;*/
+            for (int i = 0; i < 100; i++)
+                entries.Add(new() { FileName = "File Name", Volume = -5, Duration = 158, Condition = "0" });
             
             m_Path = Path.GetDirectoryName(AppContext.BaseDirectory);
             

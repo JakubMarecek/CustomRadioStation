@@ -369,6 +369,64 @@
 		</Setter>
 	</Style>
 
+	<Style Selector="ListBoxItem">
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="BorderBrush" Value="Transparent" />
+		<Setter Property="BorderThickness" Value="0" />
+		<Setter Property="Padding" Value="2 1" />
+		<Setter Property="Template">
+			<ControlTemplate>
+				<ContentPresenter Name="PART_ContentPresenter"
+				                  Padding="{TemplateBinding Padding}"
+				                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+				                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+				                  Background="{TemplateBinding Background}"
+				                  BorderBrush="{TemplateBinding BorderBrush}"
+				                  BorderThickness="{TemplateBinding BorderThickness}"
+				                  Content="{TemplateBinding Content}"
+				                  ContentTemplate="{TemplateBinding ContentTemplate}"
+				                  CornerRadius="{TemplateBinding CornerRadius}" />
+			</ControlTemplate>
+		</Setter>
+
+		<Style Selector="^:pointerover /template/ ContentPresenter">
+			<Setter Property="Background" Value="{DynamicResource ThemeControlHighlightMidBrush}" />
+		</Style>
+
+		<Style Selector="^:selected /template/ ContentPresenter">
+			<Setter Property="Background" Value="{DynamicResource ThemeAccentBrush4}" />
+		</Style>
+
+		<Style Selector="^:selected:focus /template/ ContentPresenter">
+			<Setter Property="Background" Value="{DynamicResource ThemeAccentBrush3}" />
+		</Style>
+
+		<Style Selector="^:selected:pointerover /template/ ContentPresenter">
+			<Setter Property="Background" Value="{DynamicResource ThemeAccentBrush3}" />
+		</Style>
+
+		<Style Selector="^:selected:focus:pointerover /template/ ContentPresenter">
+			<Setter Property="Background" Value="{DynamicResource ThemeAccentBrush2}" />
+		</Style>
+	</Style>
+
+	<Style Selector="ContextMenu">
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Border Background="#1b1b1b"
+				        BorderBrush="#F28C28"
+				        BorderThickness="1"
+				        CornerRadius="5">
+					<ScrollViewer Theme="{StaticResource SimpleMenuScrollViewer}">
+						<ItemsPresenter Name="PART_ItemsPresenter"
+						                ItemsPanel="{TemplateBinding ItemsPanel}"
+						                KeyboardNavigation.TabNavigation="Continue" />
+					</ScrollViewer>
+				</Border>
+			</ControlTemplate>
+		</Setter>
+	</Style>
+
 	<Style Selector="MenuFlyoutPresenter">
 		<Setter Property="Cursor" Value="Hand"/>
 		<Setter Property="Template">
