@@ -72,9 +72,9 @@
 									<Grid DockPanel.Dock="Top">
 										<Grid.ColumnDefinitions>
 											<ColumnDefinition Width="300"></ColumnDefinition>
-											<ColumnDefinition Width="120"></ColumnDefinition>
-											<ColumnDefinition Width="120"></ColumnDefinition>
-											<ColumnDefinition Width="150"></ColumnDefinition>
+											<ColumnDefinition Width="160"></ColumnDefinition>
+											<ColumnDefinition Width="170"></ColumnDefinition>
+											<ColumnDefinition Width="130"></ColumnDefinition>
 										</Grid.ColumnDefinitions>
 										<Label Grid.Column="0" Classes="ListHeader">Music file name</Label>
 										<Label Grid.Column="1" Classes="ListHeader">Music volume (dB)</Label>
@@ -88,12 +88,12 @@
 					</ListBox.Template>
 					<ListBox.ItemTemplate>
 						<DataTemplate x:DataType="{x:Type globalData:ListEntry}">
-							<Grid Margin="0,2" ToolTip.Tip="{Binding Tooltip}" ToolTip.ShowDelay="100" PointerPressed="listView1_MouseDoubleClick">
+							<Grid Background="#01000000" Margin="0,2" ToolTip.Tip="{Binding Tooltip}" ToolTip.ShowDelay="100" PointerPressed="listView1_MouseDoubleClick">
 								<Grid.ColumnDefinitions>
 									<ColumnDefinition Width="300"></ColumnDefinition>
-									<ColumnDefinition Width="120"></ColumnDefinition>
-									<ColumnDefinition Width="120"></ColumnDefinition>
-									<ColumnDefinition Width="150"></ColumnDefinition>
+									<ColumnDefinition Width="160"></ColumnDefinition>
+									<ColumnDefinition Width="170"></ColumnDefinition>
+									<ColumnDefinition Width="130"></ColumnDefinition>
 								</Grid.ColumnDefinitions>
 								<TextBlock Grid.Column="0" Margin="0,0,0,0" Classes="ListTB" Text="{Binding Name}" />
 								<TextBlock Grid.Column="1" Margin="0,0,0,0" Classes="ListTB" Text="{Binding Volume}" />
@@ -163,31 +163,11 @@
 				</Grid.Transitions>
 			</Grid>
 
-			<Grid Width="NaN" Background="Black" HorizontalAlignment="Center" VerticalAlignment="Top" Name="gridNoticeNote" Opacity="0" Margin="0,40,0,0">
-				<Grid Background="#77000000">
-					<Label Name="noticeNote" Content="a notice text" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="White" />
-				</Grid>
-				<Grid.Transitions>
-					<Transitions>
-						<DoubleTransition Property="Opacity" Duration="0:0:0.2"/>
-					</Transitions>
-				</Grid.Transitions>
-			</Grid>
-			<Grid Background="#cc000000" Name="gridException" IsVisible="false" Opacity="0">
-				<Label Content="An exception occured" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="40" Margin="50,50,0,0" FontWeight="Bold" Foreground="Red" />
-				<Label Content="Please report this to the author." VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="20" Margin="50,120,0,0" Foreground="White" />
-				<TextBlock Text="__err__" Name="excLabel" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="16" Margin="80,170,80,0" MaxWidth="{Binding Bounds.Width, ElementName=gridException}" TextWrapping="Wrap" Foreground="White" />
-				<Grid.Transitions>
-					<Transitions>
-						<DoubleTransition Property="Opacity" Duration="0:0:0.2"/>
-					</Transitions>
-				</Grid.Transitions>
-			</Grid>
 			<Grid Background="#99000000" Name="gridDialogInfo" IsVisible="false" Opacity="0">
 				<Grid VerticalAlignment="Center" HorizontalAlignment="Center" Width="500">
 					<Border Classes="DialogRect" />
 					<Label Content="Info" Name="dialogInfoName" Classes="Header" />
-					<TextBlock Text="Some description." Name="dialogInfoLabel" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="16" Margin="30,65,30,60" MaxWidth="{Binding Bounds.Width, ElementName=gridDialogInfo}" TextWrapping="Wrap" Foreground="White" />
+					<TextBlock Text="Some description." Name="dialogInfoLabel" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="16" Margin="30,65,30,70" MaxWidth="{Binding Bounds.Width, ElementName=gridDialogInfo}" TextWrapping="Wrap" Foreground="White" />
 					<Button Classes="CBtn" Content="Close" Click="ButtonDialogInfoClose_Click" Margin="0,0,10,10" Width="100" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
 				</Grid>
 				<Grid.Transitions>

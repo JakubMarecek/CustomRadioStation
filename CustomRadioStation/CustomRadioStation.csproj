@@ -4,7 +4,7 @@
     <OutputType>WinExe</OutputType>
 	  <ApplicationIcon>Assets/crs.ico</ApplicationIcon>
     <TargetFramework>net7.0</TargetFramework>
-    <Copyright>Copyright © ArmanIII 2022</Copyright>
+    <Copyright>Copyright © ArmanIII 2023</Copyright>
     <Company>ArmanIII</Company>
     <Product>Custom Radio Station</Product>
     <PackageId>CustomRadioStation</PackageId>

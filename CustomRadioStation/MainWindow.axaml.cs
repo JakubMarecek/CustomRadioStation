@@ -19,7 +19,6 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Platform.Storage;
@@ -34,7 +33,6 @@ using System.IO.Compression;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 using System.Xml.Linq;
 
@@ -87,24 +85,6 @@ namespace CustomRadioStation
             dialogInfoName.Content = name;
             dialogInfoLabel.Text = val;
             Animation(true, gridDialogInfo);
-        }
-
-        private void ShowNotice(string text)
-        {
-            noticeNote.Content = text;
-
-            gridNoticeNote.Opacity = 1;
-
-            Timer aTimer = new Timer(5000);
-            aTimer.Enabled = true;
-            aTimer.Elapsed += (object source, ElapsedEventArgs e) =>
-            {
-                aTimer.Stop();
-                Dispatcher.UIThread.InvokeAsync(() =>
-                {
-                    gridNoticeNote.Opacity = 0;
-                });
-            };
         }
 
         private void ButtonChrome_Click(object sender, RoutedEventArgs e)
@@ -243,8 +223,8 @@ namespace CustomRadioStation
             for (int i = 0; i < 100; i++)
                 list.Add(new() { FileName = "File Name", Volume = "-5", Duration = "158", Condition = "0" });
             mainList.ItemsSource = list;*/
-            for (int i = 0; i < 100; i++)
-                entries.Add(new() { FileName = "File Name", Volume = -5, Duration = 158, Condition = "0" });
+            /*for (int i = 0; i < 100; i++)
+                entries.Add(new() { FileName = "File Name", Volume = -5, Duration = 158, Condition = "0" });*/
             
             m_Path = Path.GetDirectoryName(AppContext.BaseDirectory);
             
@@ -320,13 +300,13 @@ namespace CustomRadioStation
         {
             if (entries.Count == 0)
             {
-                OpenInfoDialog(this.Title, "There are no music files, can't create package!");
+                OpenInfoDialog("Create package", "There are no music files, can't create package!");
                 return;
             }
 
             if (entries.Count > 900)
             {
-                OpenInfoDialog(this.Title, "You have too much music files, remove some of them. Maximum count of musics per station is 900.");
+                OpenInfoDialog("Create package", "You have too much music files, remove some of them. Maximum count of musics per station is 900.");
                 return;
             }
 
@@ -571,7 +551,7 @@ namespace CustomRadioStation
 
                 zip.Dispose();
 
-                OpenInfoDialog(this.Title, "Successfuly saved!");
+                OpenInfoDialog("Create package", "Successfuly saved!");
             }
         }
 
@@ -602,7 +582,7 @@ namespace CustomRadioStation
         {
             if (!File.Exists(file))
             {
-                OpenInfoDialog(this.Title, "File " + file + " doesn't exist.");
+                OpenInfoDialog("Add music", "File " + file + " doesn't exist.");
                 return;
             }
 
@@ -639,13 +619,13 @@ namespace CustomRadioStation
             WEMFile wf = new();
             if (!wf.LoadWEM(file))
             {
-                OpenInfoDialog(this.Title, $"Error occurred during loading WEM file:{file}{Environment.NewLine}{wf.ParseErrorStr}{Environment.NewLine}{Environment.NewLine}The error can be caused by wrong WEM encoding. Please convert WEM to correct encoding or select different WEM.");
+                OpenInfoDialog("Add music", $"Error occurred during loading WEM file:{file}{Environment.NewLine}{wf.ParseErrorStr}{Environment.NewLine}{Environment.NewLine}The error can be caused by wrong WEM encoding. Please convert WEM to correct encoding or select different WEM.");
                 return;
             }
 
             if (wf.Channels > 1)
             {
-                OpenInfoDialog(this.Title, $"Selected WEM {file} contains more than 1 channel. Recommended is to use single channel audio for better 3D sound.");
+                OpenInfoDialog("Add music", $"Selected WEM {file} contains more than 1 channel. Recommended is to use single channel audio for better 3D sound.");
             }
 
             string fname = name ?? Path.GetFileNameWithoutExtension(file);
