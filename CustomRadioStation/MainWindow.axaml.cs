@@ -136,7 +136,7 @@ namespace CustomRadioStation
 
         public static char DS = Path.DirectorySeparatorChar;
 
-        public static string version = "v3.00";
+        public static string version = "v4.00";
         public static string appName = "Custom Radio Station " + version + " by ArmanIII";
         public static string createdBy = "Package created using " + appName;
         GameType gameType = GameType.Invalid;
@@ -764,10 +764,10 @@ namespace CustomRadioStation
 
         private void listView1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.A && e.KeyModifiers == KeyModifiers.Control)
+            /*if (e.Key == Key.A && e.KeyModifiers == KeyModifiers.Control)
             {
                 mainList.SelectAll();
-            }
+            }*/
         }
 
         private void copyVolumeToAllMusicFilesToolStripMenuItem_Click(object sender, RoutedEventArgs e)
