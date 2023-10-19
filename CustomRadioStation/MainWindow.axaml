@@ -13,7 +13,7 @@
 		WindowStartupLocation="CenterScreen" Icon="avares://CustomRadioStation/Assets/crs.ico" Closing="Window_Closing" CanResize="False">
 
 	<Window.Styles>
-		<StyleInclude Source="avares://CustomRadioStation/StyleBase.axaml" />
+		<StyleInclude Source="avares://UILibrary/StyleBase.axaml" />
 		<StyleInclude Source="avares://CustomRadioStation/Style.axaml" />
 	</Window.Styles>
 
